@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, of, throwError } from 'rxjs';
 import { AuthStateService } from '../../auth-state/auth-state.service';
 import type { OpenIdConfiguration } from '../../config/openid-configuration';

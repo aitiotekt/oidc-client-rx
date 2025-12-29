@@ -1,4 +1,4 @@
-import { Injectable } from '@outposts/injection-js';
+import { Injectable } from 'injection-js';
 import { type Observable, ReplaySubject } from 'rxjs';
 import type { EventTypes } from './event-types';
 import type { OidcClientNotification } from './notification';

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "rootDir": ".",
+    "typeRoots": ["./types", "./node_modules/@types", "./node_modules"],
     "types": ["vitest/globals", "node"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

@@ -5,7 +5,7 @@ import {
   ReflectiveInjector,
   type Type,
   runInInjectionContext,
-} from '@outposts/injection-js';
+} from 'injection-js';
 
 export interface TestModuleMetadata {
   providers?: Provider[];

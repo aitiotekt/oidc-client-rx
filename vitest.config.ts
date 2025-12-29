@@ -1,4 +1,5 @@
 import swc from 'unplugin-swc';
+// @ts-ignore
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
@@ -31,8 +32,8 @@ export default defineConfig({
       include: /\.[mc]?[jt]sx?$/,
       // for git+ package only
       exclude: [
-        /node_modules\/(?!injection-js|@outposts\/injection-js|\.pnpm)/,
-        /node_modules\/\.pnpm\/(?!injection-js|@outposts\/injection-js)/,
+        /node_modules\/(?!injection-js|\.pnpm)/,
+        /node_modules\/\.pnpm\/(?!injection-js)/,
       ] as any,
       tsconfigFile: './tsconfig.spec.json',
     }),

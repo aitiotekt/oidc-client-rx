@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AutoLoginService } from '../auto-login/auto-login.service';

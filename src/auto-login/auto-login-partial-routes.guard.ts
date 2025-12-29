@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import type { AuthOptions } from '../auth-options';

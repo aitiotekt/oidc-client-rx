@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { BehaviorSubject, type Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CryptoService } from '../utils/crypto/crypto.service';

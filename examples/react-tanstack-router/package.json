@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@abraham/reflection": "^0.13.0",
-    "@outposts/injection-js": "^2.5.1",
+    "injection-js": "^2.5.1",
     "@tanstack/react-router": "^1.121.12",
     "@tanstack/router-devtools": "^1.121.12",
     "autoprefixer": "^10.4.21",
@@ -28,6 +28,6 @@
     "postcss": "^8.5.5",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",
-    "unplugin": "^2.3.5"
+    "unplugin": "^3.0.0"
   }
 }

@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@outposts/injection-js';
+﻿import { Injectable, inject } from 'injection-js';
 import { type Observable, forkJoin, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 import { injectAbstractType } from '../injection/inject';

@@ -1,4 +1,4 @@
-import { inject } from '@outposts/injection-js';
+import { inject } from 'injection-js';
 import { DOCUMENT } from 'src/dom';
 
 export type RouteData = {

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, map, of, switchMap } from 'rxjs';
 import type { AuthOptions } from '../../auth-options';
 import { AuthWellKnownService } from '../../config/auth-well-known/auth-well-known.service';

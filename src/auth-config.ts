@@ -1,4 +1,4 @@
-import { InjectionToken, type Provider } from '@outposts/injection-js';
+import { InjectionToken, type Provider } from 'injection-js';
 import {
   type StsConfigLoader,
   StsConfigStaticLoader,

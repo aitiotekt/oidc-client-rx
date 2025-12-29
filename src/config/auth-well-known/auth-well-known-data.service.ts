@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, throwError } from 'rxjs';
 import { map, retry } from 'rxjs/operators';
 import { DataService } from '../../api/data.service';

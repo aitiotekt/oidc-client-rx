@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@ngify/http';
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import type { Observable } from 'rxjs';
 import type { OpenIdConfiguration } from '../config/openid-configuration';
 import { HttpParams } from '../http';

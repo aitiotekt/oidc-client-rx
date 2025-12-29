@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@outposts/injection-js';
+﻿import { Injectable, inject } from 'injection-js';
 import { type Observable, Subject, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AuthStateService } from '../auth-state/auth-state.service';

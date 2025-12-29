@@ -1,4 +1,4 @@
-import { Injectable, InjectionToken, inject } from '@outposts/injection-js';
+import { Injectable, InjectionToken, inject } from 'injection-js';
 
 export type PlatformId = 'browser' | 'server';
 

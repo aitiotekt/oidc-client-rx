@@ -1,4 +1,4 @@
-import { InjectionToken, inject } from '@outposts/injection-js';
+import { InjectionToken, inject } from 'injection-js';
 import { type Observable, filter, shareReplay } from 'rxjs';
 import { EventTypes } from '../public-events/event-types';
 import { PublicEventsService } from '../public-events/public-events.service';

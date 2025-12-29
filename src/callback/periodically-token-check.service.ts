@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, ReplaySubject, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, share, switchMap } from 'rxjs/operators';
 import { AuthStateService } from '../auth-state/auth-state.service';

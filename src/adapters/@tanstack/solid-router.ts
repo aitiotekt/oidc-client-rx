@@ -1,4 +1,4 @@
-import { InjectionToken, inject } from '@outposts/injection-js';
+import { InjectionToken, inject } from 'injection-js';
 import type { AnyRouter, RouterEvents } from '@tanstack/solid-router';
 import { fromEventPattern, takeUntil } from 'rxjs';
 import type { AuthFeature } from '../../features';

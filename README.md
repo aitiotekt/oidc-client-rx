@@ -1,8 +1,8 @@
 <h1 align="center">
-  <img src="./assets/logo-512.png" height="150" alt="OUTPOSTS">
+  <img src="./assets/logo-512.png" height="150" alt="logo">
   <div style="color: #232848; font-weight: 700;">OIDC-CLIENT-RX</div>
   <div align="center">
-    <img src="https://img.shields.io/github/actions/workflow/status/lonelyhentxi/oidc-client-rx/build.yml?branch=main" alt="build-status" />
+    <img src="https://img.shields.io/github/actions/workflow/status/aitiotekt/oidc-client-rx/build.yml?branch=main" alt="build-status" />
     <img src="https://img.shields.io/badge/status-work--in--progress-blue" alt="status-badge" />
   </div>
 </h1>
@@ -11,21 +11,13 @@
 
 ## Quick Start
 
-@TODO Add More Details
-
-### Install
-
-```sh
-pnpm add oidc-client-rx @outposts/injection-js @abraham/reflection
-# npm install oidc-client-rx @outposts/injection-js @abraham/reflection
-# yarn add oidc-client-rx @outposts/injection-js @abraham/reflection
-```
-
-### Basic Usage
+pnpm add oidc-client-rx injection-js @abraham/reflection
+# npm install oidc-client-rx injection-js @abraham/reflection
+# yarn add oidc-client-rx injection-js @abraham/reflection
 
 ```typescript
 import '@abraham/reflection'; // or 'reflect-metadata' | 'core-js/es7/reflect'
-import { type Injector, ReflectiveInjector } from '@outposts/injection-js';
+import { type Injector, ReflectiveInjector } from 'injection-js';
 import { LogLevel, OidcSecurityService, provideAuth, withDefaultFeatures } from 'oidc-client-rx';
 
 const injector = ReflectiveInjector.resolveAndCreate(
@@ -59,7 +51,7 @@ const isAuthenticated$ = oidcSecurityService.isAuthenticated$;
 
 ### More Examples
 
-- [React + TanStack Router](https://github.com/lonelyhentxi/oidc-client-rx/tree/main/examples/react-tanstack-router)
+- [React + TanStack Router](https://github.com/aitiotekt/oidc-client-rx/tree/main/examples/react-tanstack-router)
 
 ## License
 

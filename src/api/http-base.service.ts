@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import type { Observable } from 'rxjs';
 import { HTTP_CLIENT, type HttpHeaders, type HttpParams } from '../http';
 

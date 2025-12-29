@@ -1,4 +1,4 @@
-import { InjectionToken } from '@outposts/injection-js';
+import { InjectionToken } from 'injection-js';
 import type { Observable } from 'rxjs';
 
 export type DestoryRef = Observable<void>;

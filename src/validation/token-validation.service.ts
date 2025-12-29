@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@outposts/injection-js';
+﻿import { Injectable, inject } from 'injection-js';
 import { base64url } from 'rfc4648';
 import { type Observable, from, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
@@ -488,9 +488,9 @@ export class TokenValidationService {
       this.jwkWindowCryptoService.importVerificationKey(key, algorithm)
     ).pipe(
       mergeMap((cryptoKey: CryptoKey) => {
-        const signature: Uint8Array = base64url.parse(rawSignature, {
+        const signature = base64url.parse(rawSignature, {
           loose: true,
-        });
+        }) as Uint8Array<ArrayBuffer>;
 
         const verifyAlgorithm = getVerifyAlg(alg);
 

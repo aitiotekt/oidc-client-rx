@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { EventTypes } from '../../public-events/event-types';

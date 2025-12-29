@@ -1,4 +1,4 @@
-﻿import { inject } from '@outposts/injection-js';
+﻿import { inject } from 'injection-js';
 import type { OpenIdConfiguration } from '../config/openid-configuration';
 import type { AuthResult } from '../flows/callback-context';
 import { BrowserStorageService } from './browser-storage.service';

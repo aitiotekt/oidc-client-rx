@@ -1,4 +1,4 @@
-import type { InjectionToken, Injector, Type } from '@outposts/injection-js';
+import type { InjectionToken, Injector, Type } from 'injection-js';
 import {
   type FlowProps,
   createContext,

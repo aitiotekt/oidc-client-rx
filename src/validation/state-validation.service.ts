@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import type { OpenIdConfiguration } from '../config/openid-configuration';

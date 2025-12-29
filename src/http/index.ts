@@ -17,7 +17,7 @@ import {
   InjectionToken,
   Optional,
   type Provider,
-} from '@outposts/injection-js';
+} from 'injection-js';
 import type { Observable } from 'rxjs';
 import type { ArrayOrNullableOne } from '../utils/types';
 // biome-ignore lint/nursery/noExportedImports: <explanation>

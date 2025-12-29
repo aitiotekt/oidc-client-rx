@@ -1,4 +1,4 @@
-import { Injectable } from '@outposts/injection-js';
+import { Injectable } from 'injection-js';
 import type { OpenIdConfiguration } from '../config/openid-configuration';
 import { injectAbstractType } from '../injection/inject';
 import { AbstractLoggerService } from './abstract-logger.service';

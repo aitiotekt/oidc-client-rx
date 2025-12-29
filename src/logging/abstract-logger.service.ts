@@ -1,4 +1,4 @@
-import { Injectable } from '@outposts/injection-js';
+import { Injectable } from 'injection-js';
 
 /**
  * Implement this class-interface to create a custom logger service.

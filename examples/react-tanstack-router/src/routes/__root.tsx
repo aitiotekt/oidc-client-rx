@@ -1,4 +1,4 @@
-import type { Injector } from '@outposts/injection-js';
+import type { Injector } from 'injection-js';
 import {
   Link,
   Outlet,

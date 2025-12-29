@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { LoggerService } from '../../logging/logger.service';
 import type { OpenIdConfiguration } from '../openid-configuration';
 import type { Level, RuleValidationResult } from './rule';

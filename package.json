@@ -1,48 +1,52 @@
 {
   "name": "oidc-client-rx",
-  "version": "0.1.0-alpha.12",
-  "homepage": "https://github.com/lonelyhentxi/oidc-client-rx",
-  "author": "lonelyhentxi",
+  "version": "0.1.0-rc.1",
+  "homepage": "https://github.com/aitiotekt/oidc-client-rx",
+  "author": "aitiotekt",
   "description": "ReactiveX enhanced OIDC and OAuth2 protocol support for browser-based JavaScript applications",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lonelyhentxi/oidc-client-rx.git"
+    "url": "https://github.com/aitiotekt/oidc-client-rx"
   },
   "bugs": {
-    "url": "https://github.com/lonelyhentxi/oidc-client-rx/issues"
+    "url": "https://github.com/aitiotekt/oidc-client-rx/issues"
   },
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "default": "./dist/index.js"
     },
     "./adapters/react": {
       "types": "./dist/adapters/react/index.d.ts",
       "import": "./dist/adapters/react/index.js",
-      "require": "./dist/adapters/react.cjs"
+      "default": "./dist/adapters/react/index.js"
     },
     "./adapters/solid-js": {
       "types": "./dist/adapters/solid-js/index.d.ts",
       "import": "./dist/adapters/solid-js/index.js",
-      "require": "./dist/adapters/solid-js.cjs"
+      "default": "./dist/adapters/solid-js/index.js"
     },
     "./adapters/@tanstack/react-router": {
       "types": "./dist/adapters/@tanstack/react-router.d.ts",
       "import": "./dist/adapters/@tanstack/react-router.js",
-      "require": "./dist/adapters/@tanstack/react-router.cjs"
+      "default": "./dist/adapters/@tanstack/react-router.js"
     },
     "./adapters/@tanstack/solid-router": {
       "types": "./dist/adapters/@tanstack/solid-router.d.ts",
       "import": "./dist/adapters/@tanstack/solid-router.js",
-      "require": "./dist/adapters/@tanstack/solid-router.cjs"
+      "default": "./dist/adapters/@tanstack/solid-router.js"
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "licenses", "LICENSE", "README.md"],
+  "files": [
+    "dist",
+    "licenses",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "rslib build",
     "dev": "rslib build --watch",
@@ -55,8 +59,8 @@
   },
   "dependencies": {
     "@ngify/http": "^2.0.6",
-    "@outposts/injection-js": "^2.5.1",
-    "rfc4648": "^1.5.4"
+    "injection-js": ">=2.6.1",
+    "rfc4648": ">=1.5.4"
   },
   "peerDependencies": {
     "@tanstack/react-router": "*",
@@ -65,35 +69,40 @@
     "rxjs": "^7.4.0||>=8.0.0",
     "solid-js": "^1"
   },
+  "engines": {
+    "node": "<25.2.0"
+  },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@biomejs/js-api": "0.7.1",
-    "@biomejs/wasm-nodejs": "^1.9.4",
+    "@biomejs/biome": "2.3.14",
+    "@biomejs/js-api": "4.0.0",
+    "@biomejs/wasm-nodejs": "^2.3.14",
     "@playwright/test": "^1.53.0",
-    "@rslib/core": "^0.9.2",
+    "@rslib/core": "^0.19.4",
     "@swc/core": "^1.12.1",
-    "@tanstack/react-router": "^1.121.12",
-    "@tanstack/solid-router": "^1.121.12",
+    "@tanstack/react-router": "^1.158.0",
+    "@tanstack/solid-router": "^1.158.0",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^24.0.1",
+    "@types/node": "^24",
     "@types/react": "^19.1.8",
-    "@vitest/coverage-v8": "^3.2.3",
+    "@types/semver": "^7.7.1",
+    "@vitest/coverage-v8": "^4.0.18",
     "commander": "^14.0.0",
-    "happy-dom": "^18.0.1",
+    "happy-dom": "^20.5.0",
     "lodash-es": "^4.17.21",
-    "oxc-parser": "^0.73.0",
-    "oxc-walker": "^0.3.0",
-    "playwright": "^1.53.0",
+    "oxc-parser": "^0.112.0",
+    "oxc-walker": "^0.7.0",
+    "playwright": "^1.58.1",
     "react": "^19.1.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
+    "semver": "^7.7.3",
     "solid-js": "^1.9.7",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3",
-    "ultracite": "^4.2.10",
+    "typescript": "^5.9.3",
+    "ultracite": "^7.1.4",
     "unplugin-swc": "^1.5.4",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.3"
+    "vite-tsconfig-paths": "^6.0.5",
+    "vitest": "^4.0.18"
   },
   "peerDependenciesMeta": {
     "react": {

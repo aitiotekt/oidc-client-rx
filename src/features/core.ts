@@ -1,5 +1,5 @@
 import type { HttpFeature } from '@ngify/http';
-import type { Provider } from '@outposts/injection-js';
+import type { Provider } from 'injection-js';
 import { NEVER, fromEvent, shareReplay, take } from 'rxjs';
 import { DESTORY_REF } from 'src/resources';
 import { DOCUMENT } from '../dom';

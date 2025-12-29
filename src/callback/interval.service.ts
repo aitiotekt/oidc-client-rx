@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { type Observable, type Subscription, interval } from 'rxjs';
 import { DOCUMENT } from '../dom';
 

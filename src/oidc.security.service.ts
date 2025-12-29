@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { BehaviorSubject, type Observable } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
 import type { AuthOptions, LogoutAuthOptions } from './auth-options';

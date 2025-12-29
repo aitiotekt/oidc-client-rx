@@ -1,4 +1,4 @@
-import type { Provider } from '@outposts/injection-js';
+import type { Provider } from 'injection-js';
 import { type Observable, forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type { OpenIdConfiguration } from '../openid-configuration';

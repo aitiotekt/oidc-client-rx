@@ -1,5 +1,5 @@
 import '@abraham/reflection'; // or 'reflect-metadata' | 'core-js/es7/reflect'
-import { type Injector, ReflectiveInjector } from '@outposts/injection-js';
+import { type Injector, ReflectiveInjector } from 'injection-js';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import {
   LogLevel,

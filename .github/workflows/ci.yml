@@ -1,0 +1,65 @@
+name: CI & Publish
+
+on:
+  push:
+    branches:
+      - "release/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    name: Build, Lint, Test, Publish
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node and Install Dependencies
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Linting Library
+        run: npm run lint
+
+      - name: Testing Frontend
+        run: npm run test-ci
+
+      - name: Building Frontend
+        run: npm run build
+
+      - name: Resolve npm tag
+        id: npm_tag
+        run: |
+          node - <<'NODE'
+          const fs = require("fs");
+          const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          const version = pkg.version;
+          const match = version.match(/-(alpha|beta|rc)\.\d+$/);
+          let tag = "latest";
+          if (match) {
+            tag = match[1];
+          } else if (version.includes("-")) {
+            console.error(`Unsupported pre-release version: ${version}`);
+            process.exit(1);
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `tag=${tag}\n`);
+          NODE
+
+      - name: Publish to npm (Trusted Publisher)
+        run: npm publish --provenance --access public --tag "${{ steps.npm_tag.outputs.tag }}"

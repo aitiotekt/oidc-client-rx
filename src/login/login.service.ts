@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@outposts/injection-js';
+import { Injectable, inject } from 'injection-js';
 import { BehaviorSubject, type Observable, of, throwError } from 'rxjs';
 import { MockUtil } from 'src/utils/reflect';
 import type { AuthOptions } from '../auth-options';

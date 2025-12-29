@@ -1,4 +1,4 @@
-import type { Provider } from '@outposts/injection-js';
+import type { Provider } from 'injection-js';
 import {
   AbstractRouter,
   type UrlTree,

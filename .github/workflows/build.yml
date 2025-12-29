@@ -17,7 +17,7 @@ jobs:
     name: Build, Lint and Test Library
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node and Install Dependencies
         uses: pnpm/action-setup@v4
@@ -26,14 +26,13 @@ jobs:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: 'pnpm'
+          node-version: 24
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-          
 
       - name: Linting Library
         run: npm run lint
@@ -41,9 +40,9 @@ jobs:
       - name: Testing Frontend
         run: npm run test-ci
 
-      - name: 'Report Coverage'
+      - name: "Report Coverage"
         if: (github.event_name == 'pull_request' && github.event.action != 'closed')
-        uses:  davelosert/vitest-coverage-report-action@v2
+        uses: davelosert/vitest-coverage-report-action@v2
 
       - name: Building Frontend
         run: npm run build

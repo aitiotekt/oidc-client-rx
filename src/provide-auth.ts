@@ -1,4 +1,4 @@
-import type { Provider } from '@outposts/injection-js';
+import type { Provider } from 'injection-js';
 import { DataService } from './api/data.service';
 import { HttpBaseService } from './api/http-base.service';
 import {
