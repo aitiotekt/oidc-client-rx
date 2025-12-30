@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@ngify/http';
+import { HttpErrorResponse } from "@ngify/http";
 
 /**
  * checks if the error is a network error
@@ -8,7 +8,7 @@ import { HttpErrorResponse } from '@ngify/http';
  * @returns true if the error is a network error
  */
 export const isNetworkError = (error: unknown): boolean =>
-  !!error &&
-  error instanceof HttpErrorResponse &&
-  ((error.error instanceof ProgressEvent && error.error.type === 'error') ||
-    (error.status === 0 && !!error.error));
+	!!error &&
+	error instanceof HttpErrorResponse &&
+	((error.error instanceof ProgressEvent && error.error.type === "error") ||
+		(error.status === 0 && !!error.error));

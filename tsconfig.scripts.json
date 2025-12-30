@@ -1,11 +1,11 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "rootDir": ".",
-    "composite": true,
-    "types": ["node"],
-    "noEmit": true
-  },
-  "files": [],
-  "include": ["scripts/"]
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"composite": true,
+		"types": ["node"],
+		"noEmit": true
+	},
+	"files": [],
+	"include": ["scripts/"]
 }

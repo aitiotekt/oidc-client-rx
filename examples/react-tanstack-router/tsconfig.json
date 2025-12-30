@@ -1,18 +1,18 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "lib": ["ES2021", "DOM", "DOM.Iterable"],
-    "useDefineForClassFields": true,
-    "resolveJsonModule": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "emitDeclarationOnly": true,
-    "noEmit": true,
-    "outDir": "./dist",
-    "declarationDir": "./dist",
-    "jsx": "preserve"
-  },
-  "include": ["src"]
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"rootDir": ".",
+		"lib": ["ES2021", "DOM", "DOM.Iterable"],
+		"useDefineForClassFields": true,
+		"resolveJsonModule": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"emitDeclarationOnly": true,
+		"noEmit": true,
+		"outDir": "./dist",
+		"declarationDir": "./dist",
+		"jsx": "preserve"
+	},
+	"include": ["src"]
 }

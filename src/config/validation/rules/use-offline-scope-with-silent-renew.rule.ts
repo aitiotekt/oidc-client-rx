@@ -1,23 +1,23 @@
-import type { OpenIdConfiguration } from '../../openid-configuration';
-import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from '../rule';
+import type { OpenIdConfiguration } from "../../openid-configuration";
+import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from "../rule";
 
 export const useOfflineScopeWithSilentRenew = (
-  passedConfig: OpenIdConfiguration
+	passedConfig: OpenIdConfiguration,
 ): RuleValidationResult => {
-  const hasRefreshToken = passedConfig.useRefreshToken;
-  const hasSilentRenew = passedConfig.silentRenew;
-  const scope = passedConfig.scope || '';
-  const hasOfflineScope = scope.split(' ').includes('offline_access');
+	const hasRefreshToken = passedConfig.useRefreshToken;
+	const hasSilentRenew = passedConfig.silentRenew;
+	const scope = passedConfig.scope || "";
+	const hasOfflineScope = scope.split(" ").includes("offline_access");
 
-  if (hasRefreshToken && hasSilentRenew && !hasOfflineScope) {
-    return {
-      result: false,
-      messages: [
-        'When using silent renew and refresh tokens please set the `offline_access` scope',
-      ],
-      level: 'warning',
-    };
-  }
+	if (hasRefreshToken && hasSilentRenew && !hasOfflineScope) {
+		return {
+			result: false,
+			messages: [
+				"When using silent renew and refresh tokens please set the `offline_access` scope",
+			],
+			level: "warning",
+		};
+	}
 
-  return POSITIVE_VALIDATION_RESULT;
+	return POSITIVE_VALIDATION_RESULT;
 };

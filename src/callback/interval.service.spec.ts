@@ -1,81 +1,80 @@
-import { TestBed } from '@/testing';
-import { Subscription } from 'rxjs';
-import { vi } from 'vitest';
-import { IntervalService } from './interval.service';
+import { Subscription } from "rxjs";
+import { vi } from "vitest";
+import { TestBed } from "@/testing";
+import { IntervalService } from "./interval.service";
 
-describe('IntervalService', () => {
-  let intervalService: IntervalService;
+describe("IntervalService", () => {
+	let intervalService: IntervalService;
 
-  beforeEach(() => {
-    vi.useFakeTimers();
-    TestBed.configureTestingModule({
-      providers: [
-        IntervalService,
-        {
-          provide: Document,
-          useValue: {
-            defaultView: {
-              setInterval: window.setInterval,
-            },
-          },
-        },
-      ],
-    });
-    intervalService = TestBed.inject(IntervalService);
-  });
+	beforeEach(() => {
+		vi.useFakeTimers();
+		TestBed.configureTestingModule({
+			providers: [
+				IntervalService,
+				{
+					provide: Document,
+					useValue: {
+						defaultView: {
+							setInterval: window.setInterval,
+						},
+					},
+				},
+			],
+		});
+		intervalService = TestBed.inject(IntervalService);
+	});
 
-  // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+	afterEach(() => {
+		vi.useRealTimers();
+	});
 
-  it('should create', () => {
-    expect(intervalService).toBeTruthy();
-  });
+	it("should create", () => {
+		expect(intervalService).toBeTruthy();
+	});
 
-  describe('stopPeriodicTokenCheck', () => {
-    it('calls unsubscribe and sets to null', () => {
-      intervalService.runTokenValidationRunning = new Subscription();
-      const spy = vi.spyOn(
-        intervalService.runTokenValidationRunning,
-        'unsubscribe'
-      );
+	describe("stopPeriodicTokenCheck", () => {
+		it("calls unsubscribe and sets to null", () => {
+			intervalService.runTokenValidationRunning = new Subscription();
+			const spy = vi.spyOn(
+				intervalService.runTokenValidationRunning,
+				"unsubscribe",
+			);
 
-      intervalService.stopPeriodicTokenCheck();
+			intervalService.stopPeriodicTokenCheck();
 
-      expect(spy).toHaveBeenCalled();
-      expect(intervalService.runTokenValidationRunning).toBeNull();
-    });
+			expect(spy).toHaveBeenCalled();
+			expect(intervalService.runTokenValidationRunning).toBeNull();
+		});
 
-    it('does nothing if `runTokenValidationRunning` is null', () => {
-      intervalService.runTokenValidationRunning = new Subscription();
-      const spy = vi.spyOn(
-        intervalService.runTokenValidationRunning,
-        'unsubscribe'
-      );
+		it("does nothing if `runTokenValidationRunning` is null", () => {
+			intervalService.runTokenValidationRunning = new Subscription();
+			const spy = vi.spyOn(
+				intervalService.runTokenValidationRunning,
+				"unsubscribe",
+			);
 
-      intervalService.runTokenValidationRunning = null;
-      intervalService.stopPeriodicTokenCheck();
+			intervalService.runTokenValidationRunning = null;
+			intervalService.stopPeriodicTokenCheck();
 
-      expect(spy).not.toHaveBeenCalled();
-    });
-  });
+			expect(spy).not.toHaveBeenCalled();
+		});
+	});
 
-  describe('startPeriodicTokenCheck', () => {
-    it('starts check after correct milliseconds', async () => {
-      const periodicCheck = intervalService.startPeriodicTokenCheck(0.5);
-      const spy = vi.fn();
-      const sub = periodicCheck.subscribe(() => {
-        spy();
-      });
+	describe("startPeriodicTokenCheck", () => {
+		it("starts check after correct milliseconds", async () => {
+			const periodicCheck = intervalService.startPeriodicTokenCheck(0.5);
+			const spy = vi.fn();
+			const sub = periodicCheck.subscribe(() => {
+				spy();
+			});
 
-      await vi.advanceTimersByTimeAsync(500);
-      expect(spy).toHaveBeenCalledTimes(1);
+			await vi.advanceTimersByTimeAsync(500);
+			expect(spy).toHaveBeenCalledTimes(1);
 
-      await vi.advanceTimersByTimeAsync(500);
-      expect(spy).toHaveBeenCalledTimes(2);
+			await vi.advanceTimersByTimeAsync(500);
+			expect(spy).toHaveBeenCalledTimes(2);
 
-      sub.unsubscribe();
-    });
-  });
+			sub.unsubscribe();
+		});
+	});
 });

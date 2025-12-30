@@ -1,17 +1,17 @@
-import { type PassedInitialConfig, createStaticLoader } from './auth-config';
+import { createStaticLoader, type PassedInitialConfig } from "./auth-config";
 
-describe('AuthConfig', () => {
-  describe('createStaticLoader', () => {
-    it('should throw an error if no config is provided', () => {
-      // Arrange
-      const passedConfig = {} as PassedInitialConfig;
+describe("AuthConfig", () => {
+	describe("createStaticLoader", () => {
+		it("should throw an error if no config is provided", () => {
+			// Arrange
+			const passedConfig = {} as PassedInitialConfig;
 
-      // Act
+			// Act
 
-      // Assert
-      expect(() => createStaticLoader(passedConfig)).toThrowError(
-        'No config provided!'
-      );
-    });
-  });
+			// Assert
+			expect(() => createStaticLoader(passedConfig)).toThrowError(
+				"No config provided!",
+			);
+		});
+	});
 });

@@ -1,25 +1,25 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "typeRoots": ["./types", "./node_modules/@types", "./node_modules"],
-    "types": ["vitest/globals", "node"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "noEmit": true,
-    "paths": {
-      "@/testing": ["./src/testing"],
-      "@/testing/*": ["./src/testing/*"],
-      "oidc-client-rx": ["./src"],
-      "oidc-client-rx/*": ["./src/*"]
-    }
-  },
-  "files": [],
-  "include": ["src/**/*.spec.ts", "src/testing"],
-  "references": [
-    {
-      "path": "./tsconfig.lib.json"
-    }
-  ]
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"rootDir": ".",
+		"typeRoots": ["./types", "./node_modules/@types", "./node_modules"],
+		"types": ["vitest/globals", "node"],
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"noEmit": true,
+		"paths": {
+			"@/testing": ["./src/testing"],
+			"@/testing/*": ["./src/testing/*"],
+			"oidc-client-rx": ["./src"],
+			"oidc-client-rx/*": ["./src/*"]
+		}
+	},
+	"files": [],
+	"include": ["src/**/*.spec.ts", "src/testing"],
+	"references": [
+		{
+			"path": "./tsconfig.lib.json"
+		}
+	]
 }

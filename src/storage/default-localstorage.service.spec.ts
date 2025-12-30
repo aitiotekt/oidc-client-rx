@@ -1,62 +1,62 @@
-import { TestBed } from '@/testing';
-import { vi } from 'vitest';
-import { DefaultLocalStorageService } from './default-localstorage.service';
+import { vi } from "vitest";
+import { TestBed } from "@/testing";
+import { DefaultLocalStorageService } from "./default-localstorage.service";
 
 /**
  * if use jsdom, then use Storage.prototype, https://github.com/jsdom/jsdom/issues/2318
  */
 
-describe('DefaultLocalStorageService', () => {
-  let service: DefaultLocalStorageService;
+describe("DefaultLocalStorageService", () => {
+	let service: DefaultLocalStorageService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [DefaultLocalStorageService],
-    });
-    service = TestBed.inject(DefaultLocalStorageService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [DefaultLocalStorageService],
+		});
+		service = TestBed.inject(DefaultLocalStorageService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it("should create", () => {
+		expect(service).toBeTruthy();
+	});
 
-  describe('read', () => {
-    it('should call localstorage.getItem', () => {
-      const spy = vi.spyOn(localStorage, 'getItem');
+	describe("read", () => {
+		it("should call localstorage.getItem", () => {
+			const spy = vi.spyOn(localStorage, "getItem");
 
-      service.read('henlo');
+			service.read("henlo");
 
-      expect(spy).toHaveBeenCalledExactlyOnceWith('henlo');
-    });
-  });
+			expect(spy).toHaveBeenCalledExactlyOnceWith("henlo");
+		});
+	});
 
-  describe('write', () => {
-    it('should call localstorage.setItem', () => {
-      const spy = vi.spyOn(localStorage, 'setItem');
+	describe("write", () => {
+		it("should call localstorage.setItem", () => {
+			const spy = vi.spyOn(localStorage, "setItem");
 
-      service.write('henlo', 'furiend');
+			service.write("henlo", "furiend");
 
-      expect(spy).toHaveBeenCalledExactlyOnceWith('henlo', 'furiend');
-    });
-  });
+			expect(spy).toHaveBeenCalledExactlyOnceWith("henlo", "furiend");
+		});
+	});
 
-  describe('remove', () => {
-    it('should call localstorage.removeItem', () => {
-      const spy = vi.spyOn(localStorage, 'removeItem');
+	describe("remove", () => {
+		it("should call localstorage.removeItem", () => {
+			const spy = vi.spyOn(localStorage, "removeItem");
 
-      service.remove('henlo');
+			service.remove("henlo");
 
-      expect(spy).toHaveBeenCalledExactlyOnceWith('henlo');
-    });
-  });
+			expect(spy).toHaveBeenCalledExactlyOnceWith("henlo");
+		});
+	});
 
-  describe('clear', () => {
-    it('should call localstorage.clear', () => {
-      const spy = vi.spyOn(localStorage, 'clear');
+	describe("clear", () => {
+		it("should call localstorage.clear", () => {
+			const spy = vi.spyOn(localStorage, "clear");
 
-      service.clear();
+			service.clear();
 
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-  });
+			expect(spy).toHaveBeenCalledTimes(1);
+		});
+	});
 });

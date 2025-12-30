@@ -1,329 +1,329 @@
-import { Injectable, inject } from 'injection-js';
-import { BehaviorSubject, type Observable, throwError } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
-import type { OpenIdConfiguration } from '../config/openid-configuration';
-import type { AuthResult } from '../flows/callback-context';
-import { LoggerService } from '../logging/logger.service';
-import { EventTypes } from '../public-events/event-types';
-import { PublicEventsService } from '../public-events/public-events.service';
-import { StoragePersistenceService } from '../storage/storage-persistence.service';
-import { TokenValidationService } from '../validation/token-validation.service';
-import type { AuthenticatedResult } from './auth-result';
-import type { AuthStateResult } from './auth-state';
+import { Injectable, inject } from "injection-js";
+import { BehaviorSubject, type Observable, throwError } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
+import type { OpenIdConfiguration } from "../config/openid-configuration";
+import type { AuthResult } from "../flows/callback-context";
+import { LoggerService } from "../logging/logger.service";
+import { EventTypes } from "../public-events/event-types";
+import { PublicEventsService } from "../public-events/public-events.service";
+import { StoragePersistenceService } from "../storage/storage-persistence.service";
+import { TokenValidationService } from "../validation/token-validation.service";
+import type { AuthenticatedResult } from "./auth-result";
+import type { AuthStateResult } from "./auth-state";
 
 const DEFAULT_AUTHRESULT = {
-  isAuthenticated: false,
-  allConfigsAuthenticated: [],
+	isAuthenticated: false,
+	allConfigsAuthenticated: [],
 };
 
 @Injectable()
 export class AuthStateService {
-  private readonly storagePersistenceService = inject(
-    StoragePersistenceService
-  );
+	private readonly storagePersistenceService = inject(
+		StoragePersistenceService,
+	);
 
-  private readonly loggerService = inject(LoggerService);
+	private readonly loggerService = inject(LoggerService);
 
-  private readonly publicEventsService = inject(PublicEventsService);
+	private readonly publicEventsService = inject(PublicEventsService);
 
-  private readonly tokenValidationService = inject(TokenValidationService);
+	private readonly tokenValidationService = inject(TokenValidationService);
 
-  private readonly authenticatedInternal$ =
-    new BehaviorSubject<AuthenticatedResult>(DEFAULT_AUTHRESULT);
+	private readonly authenticatedInternal$ =
+		new BehaviorSubject<AuthenticatedResult>(DEFAULT_AUTHRESULT);
 
-  get authenticated$(): Observable<AuthenticatedResult> {
-    return this.authenticatedInternal$
-      .asObservable()
-      .pipe(distinctUntilChanged());
-  }
+	get authenticated$(): Observable<AuthenticatedResult> {
+		return this.authenticatedInternal$
+			.asObservable()
+			.pipe(distinctUntilChanged());
+	}
 
-  setAuthenticatedAndFireEvent(allConfigs: OpenIdConfiguration[]): void {
-    const result = this.composeAuthenticatedResult(allConfigs);
+	setAuthenticatedAndFireEvent(allConfigs: OpenIdConfiguration[]): void {
+		const result = this.composeAuthenticatedResult(allConfigs);
 
-    this.authenticatedInternal$.next(result);
-  }
+		this.authenticatedInternal$.next(result);
+	}
 
-  setUnauthenticatedAndFireEvent(
-    currentConfig: OpenIdConfiguration,
-    allConfigs: OpenIdConfiguration[]
-  ): void {
-    this.storagePersistenceService.resetAuthStateInStorage(currentConfig);
+	setUnauthenticatedAndFireEvent(
+		currentConfig: OpenIdConfiguration,
+		allConfigs: OpenIdConfiguration[],
+	): void {
+		this.storagePersistenceService.resetAuthStateInStorage(currentConfig);
 
-    const result = this.composeUnAuthenticatedResult(allConfigs);
+		const result = this.composeUnAuthenticatedResult(allConfigs);
 
-    this.authenticatedInternal$.next(result);
-  }
+		this.authenticatedInternal$.next(result);
+	}
 
-  updateAndPublishAuthState(authenticationResult: AuthStateResult): void {
-    this.publicEventsService.fireEvent<AuthStateResult>(
-      EventTypes.NewAuthenticationResult,
-      authenticationResult
-    );
-  }
+	updateAndPublishAuthState(authenticationResult: AuthStateResult): void {
+		this.publicEventsService.fireEvent<AuthStateResult>(
+			EventTypes.NewAuthenticationResult,
+			authenticationResult,
+		);
+	}
 
-  setAuthorizationData(
-    accessToken: string,
-    authResult: AuthResult | null,
-    currentConfig: OpenIdConfiguration,
-    allConfigs: OpenIdConfiguration[]
-  ): void {
-    this.loggerService.logDebug(
-      currentConfig,
-      `storing the accessToken '${accessToken}'`
-    );
+	setAuthorizationData(
+		accessToken: string,
+		authResult: AuthResult | null,
+		currentConfig: OpenIdConfiguration,
+		allConfigs: OpenIdConfiguration[],
+	): void {
+		this.loggerService.logDebug(
+			currentConfig,
+			`storing the accessToken '${accessToken}'`,
+		);
 
-    this.storagePersistenceService.write(
-      'authzData',
-      accessToken,
-      currentConfig
-    );
-    this.persistAccessTokenExpirationTime(authResult, currentConfig);
-    this.setAuthenticatedAndFireEvent(allConfigs);
-  }
+		this.storagePersistenceService.write(
+			"authzData",
+			accessToken,
+			currentConfig,
+		);
+		this.persistAccessTokenExpirationTime(authResult, currentConfig);
+		this.setAuthenticatedAndFireEvent(allConfigs);
+	}
 
-  getAccessToken(configuration: OpenIdConfiguration | null): string {
-    if (!configuration) {
-      return '';
-    }
+	getAccessToken(configuration: OpenIdConfiguration | null): string {
+		if (!configuration) {
+			return "";
+		}
 
-    if (!this.isAuthenticated(configuration)) {
-      return '';
-    }
+		if (!this.isAuthenticated(configuration)) {
+			return "";
+		}
 
-    const token = this.storagePersistenceService.getAccessToken(configuration);
+		const token = this.storagePersistenceService.getAccessToken(configuration);
 
-    return this.decodeURIComponentSafely(token);
-  }
+		return this.decodeURIComponentSafely(token);
+	}
 
-  getIdToken(configuration: OpenIdConfiguration | null): string {
-    if (!configuration) {
-      return '';
-    }
+	getIdToken(configuration: OpenIdConfiguration | null): string {
+		if (!configuration) {
+			return "";
+		}
 
-    if (!this.isAuthenticated(configuration)) {
-      return '';
-    }
+		if (!this.isAuthenticated(configuration)) {
+			return "";
+		}
 
-    const token = this.storagePersistenceService.getIdToken(configuration);
+		const token = this.storagePersistenceService.getIdToken(configuration);
 
-    return this.decodeURIComponentSafely(token);
-  }
+		return this.decodeURIComponentSafely(token);
+	}
 
-  getRefreshToken(configuration: OpenIdConfiguration | null): string {
-    if (!configuration) {
-      return '';
-    }
+	getRefreshToken(configuration: OpenIdConfiguration | null): string {
+		if (!configuration) {
+			return "";
+		}
 
-    if (!this.isAuthenticated(configuration)) {
-      return '';
-    }
+		if (!this.isAuthenticated(configuration)) {
+			return "";
+		}
 
-    const token = this.storagePersistenceService.getRefreshToken(configuration);
+		const token = this.storagePersistenceService.getRefreshToken(configuration);
 
-    return this.decodeURIComponentSafely(token);
-  }
+		return this.decodeURIComponentSafely(token);
+	}
 
-  getAuthenticationResult(
-    configuration: OpenIdConfiguration | null
-  ): AuthResult | null {
-    if (!configuration) {
-      return null;
-    }
+	getAuthenticationResult(
+		configuration: OpenIdConfiguration | null,
+	): AuthResult | null {
+		if (!configuration) {
+			return null;
+		}
 
-    if (!this.isAuthenticated(configuration)) {
-      return null;
-    }
+		if (!this.isAuthenticated(configuration)) {
+			return null;
+		}
 
-    return this.storagePersistenceService.getAuthenticationResult(
-      configuration
-    );
-  }
+		return this.storagePersistenceService.getAuthenticationResult(
+			configuration,
+		);
+	}
 
-  areAuthStorageTokensValid(
-    configuration: OpenIdConfiguration | null
-  ): boolean {
-    if (!configuration) {
-      return false;
-    }
+	areAuthStorageTokensValid(
+		configuration: OpenIdConfiguration | null,
+	): boolean {
+		if (!configuration) {
+			return false;
+		}
 
-    if (!this.isAuthenticated(configuration)) {
-      return false;
-    }
+		if (!this.isAuthenticated(configuration)) {
+			return false;
+		}
 
-    if (this.hasIdTokenExpiredAndRenewCheckIsEnabled(configuration)) {
-      this.loggerService.logDebug(
-        configuration,
-        'persisted idToken is expired'
-      );
+		if (this.hasIdTokenExpiredAndRenewCheckIsEnabled(configuration)) {
+			this.loggerService.logDebug(
+				configuration,
+				"persisted idToken is expired",
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    if (this.hasAccessTokenExpiredIfExpiryExists(configuration)) {
-      this.loggerService.logDebug(
-        configuration,
-        'persisted accessToken is expired'
-      );
+		if (this.hasAccessTokenExpiredIfExpiryExists(configuration)) {
+			this.loggerService.logDebug(
+				configuration,
+				"persisted accessToken is expired",
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    this.loggerService.logDebug(
-      configuration,
-      'persisted idToken and accessToken are valid'
-    );
+		this.loggerService.logDebug(
+			configuration,
+			"persisted idToken and accessToken are valid",
+		);
 
-    return true;
-  }
+		return true;
+	}
 
-  hasIdTokenExpiredAndRenewCheckIsEnabled(
-    configuration: OpenIdConfiguration
-  ): boolean {
-    const {
-      renewTimeBeforeTokenExpiresInSeconds,
-      triggerRefreshWhenIdTokenExpired,
-      disableIdTokenValidation,
-    } = configuration;
+	hasIdTokenExpiredAndRenewCheckIsEnabled(
+		configuration: OpenIdConfiguration,
+	): boolean {
+		const {
+			renewTimeBeforeTokenExpiresInSeconds,
+			triggerRefreshWhenIdTokenExpired,
+			disableIdTokenValidation,
+		} = configuration;
 
-    if (!triggerRefreshWhenIdTokenExpired || disableIdTokenValidation) {
-      return false;
-    }
-    const tokenToCheck =
-      this.storagePersistenceService.getIdToken(configuration);
+		if (!triggerRefreshWhenIdTokenExpired || disableIdTokenValidation) {
+			return false;
+		}
+		const tokenToCheck =
+			this.storagePersistenceService.getIdToken(configuration);
 
-    const idTokenExpired = this.tokenValidationService.hasIdTokenExpired(
-      tokenToCheck,
-      configuration,
-      renewTimeBeforeTokenExpiresInSeconds
-    );
+		const idTokenExpired = this.tokenValidationService.hasIdTokenExpired(
+			tokenToCheck,
+			configuration,
+			renewTimeBeforeTokenExpiresInSeconds,
+		);
 
-    if (idTokenExpired) {
-      this.publicEventsService.fireEvent<boolean>(
-        EventTypes.IdTokenExpired,
-        idTokenExpired
-      );
-    }
+		if (idTokenExpired) {
+			this.publicEventsService.fireEvent<boolean>(
+				EventTypes.IdTokenExpired,
+				idTokenExpired,
+			);
+		}
 
-    return idTokenExpired;
-  }
+		return idTokenExpired;
+	}
 
-  hasAccessTokenExpiredIfExpiryExists(
-    configuration: OpenIdConfiguration
-  ): boolean {
-    const { renewTimeBeforeTokenExpiresInSeconds } = configuration;
-    const accessTokenExpiresIn = this.storagePersistenceService.read(
-      'access_token_expires_at',
-      configuration
-    );
-    const accessTokenHasNotExpired =
-      this.tokenValidationService.validateAccessTokenNotExpired(
-        accessTokenExpiresIn,
-        configuration,
-        renewTimeBeforeTokenExpiresInSeconds
-      );
+	hasAccessTokenExpiredIfExpiryExists(
+		configuration: OpenIdConfiguration,
+	): boolean {
+		const { renewTimeBeforeTokenExpiresInSeconds } = configuration;
+		const accessTokenExpiresIn = this.storagePersistenceService.read(
+			"access_token_expires_at",
+			configuration,
+		);
+		const accessTokenHasNotExpired =
+			this.tokenValidationService.validateAccessTokenNotExpired(
+				accessTokenExpiresIn,
+				configuration,
+				renewTimeBeforeTokenExpiresInSeconds,
+			);
 
-    const hasExpired = !accessTokenHasNotExpired;
+		const hasExpired = !accessTokenHasNotExpired;
 
-    if (hasExpired) {
-      this.publicEventsService.fireEvent<boolean>(
-        EventTypes.TokenExpired,
-        hasExpired
-      );
-    }
+		if (hasExpired) {
+			this.publicEventsService.fireEvent<boolean>(
+				EventTypes.TokenExpired,
+				hasExpired,
+			);
+		}
 
-    return hasExpired;
-  }
+		return hasExpired;
+	}
 
-  isAuthenticated(configuration: OpenIdConfiguration | null): boolean {
-    if (!configuration) {
-      throwError(
-        () =>
-          new Error(
-            'Please provide a configuration before setting up the module'
-          )
-      );
+	isAuthenticated(configuration: OpenIdConfiguration | null): boolean {
+		if (!configuration) {
+			throwError(
+				() =>
+					new Error(
+						"Please provide a configuration before setting up the module",
+					),
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    const hasAccessToken =
-      !!this.storagePersistenceService.getAccessToken(configuration);
-    const hasIdToken =
-      !!this.storagePersistenceService.getIdToken(configuration);
+		const hasAccessToken =
+			!!this.storagePersistenceService.getAccessToken(configuration);
+		const hasIdToken =
+			!!this.storagePersistenceService.getIdToken(configuration);
 
-    return hasAccessToken && hasIdToken;
-  }
+		return hasAccessToken && hasIdToken;
+	}
 
-  private decodeURIComponentSafely(token: string): string {
-    if (token) {
-      return decodeURIComponent(token);
-    }
-    return '';
-  }
+	private decodeURIComponentSafely(token: string): string {
+		if (token) {
+			return decodeURIComponent(token);
+		}
+		return "";
+	}
 
-  private persistAccessTokenExpirationTime(
-    authResult: AuthResult | null,
-    configuration: OpenIdConfiguration
-  ): void {
-    if (authResult?.expires_in) {
-      const accessTokenExpiryTime =
-        new Date(new Date().toUTCString()).valueOf() +
-        authResult.expires_in * 1000;
+	private persistAccessTokenExpirationTime(
+		authResult: AuthResult | null,
+		configuration: OpenIdConfiguration,
+	): void {
+		if (authResult?.expires_in) {
+			const accessTokenExpiryTime =
+				new Date(new Date().toUTCString()).valueOf() +
+				authResult.expires_in * 1000;
 
-      this.storagePersistenceService.write(
-        'access_token_expires_at',
-        accessTokenExpiryTime,
-        configuration
-      );
-    }
-  }
+			this.storagePersistenceService.write(
+				"access_token_expires_at",
+				accessTokenExpiryTime,
+				configuration,
+			);
+		}
+	}
 
-  private composeAuthenticatedResult(
-    allConfigs: OpenIdConfiguration[]
-  ): AuthenticatedResult {
-    if (allConfigs.length === 1) {
-      const { configId } = allConfigs[0];
+	private composeAuthenticatedResult(
+		allConfigs: OpenIdConfiguration[],
+	): AuthenticatedResult {
+		if (allConfigs.length === 1) {
+			const { configId } = allConfigs[0];
 
-      return {
-        isAuthenticated: true,
-        allConfigsAuthenticated: [
-          { configId: configId ?? '', isAuthenticated: true },
-        ],
-      };
-    }
+			return {
+				isAuthenticated: true,
+				allConfigsAuthenticated: [
+					{ configId: configId ?? "", isAuthenticated: true },
+				],
+			};
+		}
 
-    return this.checkallConfigsIfTheyAreAuthenticated(allConfigs);
-  }
+		return this.checkallConfigsIfTheyAreAuthenticated(allConfigs);
+	}
 
-  private composeUnAuthenticatedResult(
-    allConfigs: OpenIdConfiguration[]
-  ): AuthenticatedResult {
-    if (allConfigs.length === 1) {
-      const { configId } = allConfigs[0];
+	private composeUnAuthenticatedResult(
+		allConfigs: OpenIdConfiguration[],
+	): AuthenticatedResult {
+		if (allConfigs.length === 1) {
+			const { configId } = allConfigs[0];
 
-      return {
-        isAuthenticated: false,
-        allConfigsAuthenticated: [
-          { configId: configId ?? '', isAuthenticated: false },
-        ],
-      };
-    }
+			return {
+				isAuthenticated: false,
+				allConfigsAuthenticated: [
+					{ configId: configId ?? "", isAuthenticated: false },
+				],
+			};
+		}
 
-    return this.checkallConfigsIfTheyAreAuthenticated(allConfigs);
-  }
+		return this.checkallConfigsIfTheyAreAuthenticated(allConfigs);
+	}
 
-  private checkallConfigsIfTheyAreAuthenticated(
-    allConfigs: OpenIdConfiguration[]
-  ): AuthenticatedResult {
-    const allConfigsAuthenticated = allConfigs.map((config) => ({
-      configId: config.configId ?? '',
-      isAuthenticated: this.isAuthenticated(config),
-    }));
+	private checkallConfigsIfTheyAreAuthenticated(
+		allConfigs: OpenIdConfiguration[],
+	): AuthenticatedResult {
+		const allConfigsAuthenticated = allConfigs.map((config) => ({
+			configId: config.configId ?? "",
+			isAuthenticated: this.isAuthenticated(config),
+		}));
 
-    const isAuthenticated = allConfigsAuthenticated.every(
-      (x) => !!x.isAuthenticated
-    );
+		const isAuthenticated = allConfigsAuthenticated.every(
+			(x) => !!x.isAuthenticated,
+		);
 
-    return { allConfigsAuthenticated, isAuthenticated };
-  }
+		return { allConfigsAuthenticated, isAuthenticated };
+	}
 }

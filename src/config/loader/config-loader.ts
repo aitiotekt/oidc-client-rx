@@ -1,53 +1,53 @@
-import type { Provider } from 'injection-js';
-import { type Observable, forkJoin, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import type { OpenIdConfiguration } from '../openid-configuration';
+import type { Provider } from "injection-js";
+import { forkJoin, type Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
+import type { OpenIdConfiguration } from "../openid-configuration";
 
 export class OpenIdConfigLoader {
-  loader?: Provider;
+	loader?: Provider;
 }
 
 export abstract class StsConfigLoader {
-  abstract loadConfigs(): Observable<OpenIdConfiguration[]>;
+	abstract loadConfigs(): Observable<OpenIdConfiguration[]>;
 }
 
 export class StsConfigStaticLoader implements StsConfigLoader {
-  constructor(
-    private readonly passedConfigs: OpenIdConfiguration | OpenIdConfiguration[]
-  ) {}
+	constructor(
+		private readonly passedConfigs: OpenIdConfiguration | OpenIdConfiguration[],
+	) {}
 
-  loadConfigs(): Observable<OpenIdConfiguration[]> {
-    if (Array.isArray(this.passedConfigs)) {
-      return of(this.passedConfigs);
-    }
+	loadConfigs(): Observable<OpenIdConfiguration[]> {
+		if (Array.isArray(this.passedConfigs)) {
+			return of(this.passedConfigs);
+		}
 
-    return of([this.passedConfigs]);
-  }
+		return of([this.passedConfigs]);
+	}
 }
 
 export class StsConfigHttpLoader implements StsConfigLoader {
-  constructor(
-    private readonly configs$:
-      | Observable<OpenIdConfiguration>
-      | Observable<OpenIdConfiguration>[]
-      | Observable<OpenIdConfiguration[]>
-  ) {}
+	constructor(
+		private readonly configs$:
+			| Observable<OpenIdConfiguration>
+			| Observable<OpenIdConfiguration>[]
+			| Observable<OpenIdConfiguration[]>,
+	) {}
 
-  loadConfigs(): Observable<OpenIdConfiguration[]> {
-    if (Array.isArray(this.configs$)) {
-      return forkJoin(this.configs$);
-    }
+	loadConfigs(): Observable<OpenIdConfiguration[]> {
+		if (Array.isArray(this.configs$)) {
+			return forkJoin(this.configs$);
+		}
 
-    const singleConfigOrArray = this.configs$ as Observable<unknown>;
+		const singleConfigOrArray = this.configs$ as Observable<unknown>;
 
-    return singleConfigOrArray.pipe(
-      map((value: unknown) => {
-        if (Array.isArray(value)) {
-          return value as OpenIdConfiguration[];
-        }
+		return singleConfigOrArray.pipe(
+			map((value: unknown) => {
+				if (Array.isArray(value)) {
+					return value as OpenIdConfiguration[];
+				}
 
-        return [value] as OpenIdConfiguration[];
-      })
-    );
-  }
+				return [value] as OpenIdConfiguration[];
+			}),
+		);
+	}
 }

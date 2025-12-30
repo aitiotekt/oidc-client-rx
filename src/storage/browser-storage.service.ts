@@ -1,121 +1,121 @@
-import { Injectable, inject } from 'injection-js';
-import type { OpenIdConfiguration } from '../config/openid-configuration';
-import { injectAbstractType } from '../injection';
-import { LoggerService } from '../logging/logger.service';
-import { AbstractSecurityStorage } from './abstract-security-storage';
+import { Injectable, inject } from "injection-js";
+import type { OpenIdConfiguration } from "../config/openid-configuration";
+import { injectAbstractType } from "../injection";
+import { LoggerService } from "../logging/logger.service";
+import { AbstractSecurityStorage } from "./abstract-security-storage";
 
 @Injectable()
 export class BrowserStorageService {
-  private readonly loggerService = inject(LoggerService);
+	private readonly loggerService = inject(LoggerService);
 
-  private readonly abstractSecurityStorage = injectAbstractType(
-    AbstractSecurityStorage
-  );
+	private readonly abstractSecurityStorage = injectAbstractType(
+		AbstractSecurityStorage,
+	);
 
-  read(key: string, configuration: OpenIdConfiguration): any {
-    const { configId } = configuration;
+	read(key: string, configuration: OpenIdConfiguration): any {
+		const { configId } = configuration;
 
-    if (!configId) {
-      this.loggerService.logDebug(
-        configuration,
-        `Wanted to read '${key}' but configId was '${configId}'`
-      );
+		if (!configId) {
+			this.loggerService.logDebug(
+				configuration,
+				`Wanted to read '${key}' but configId was '${configId}'`,
+			);
 
-      return null;
-    }
+			return null;
+		}
 
-    if (!this.hasStorage()) {
-      this.loggerService.logDebug(
-        configuration,
-        `Wanted to read '${key}' but Storage was undefined`
-      );
+		if (!this.hasStorage()) {
+			this.loggerService.logDebug(
+				configuration,
+				`Wanted to read '${key}' but Storage was undefined`,
+			);
 
-      return null;
-    }
+			return null;
+		}
 
-    const storedConfig = this.abstractSecurityStorage.read(configId);
+		const storedConfig = this.abstractSecurityStorage.read(configId);
 
-    if (!storedConfig) {
-      return null;
-    }
+		if (!storedConfig) {
+			return null;
+		}
 
-    return JSON.parse(storedConfig);
-  }
+		return JSON.parse(storedConfig);
+	}
 
-  write(value: any, configuration: OpenIdConfiguration): boolean {
-    const { configId } = configuration;
+	write(value: any, configuration: OpenIdConfiguration): boolean {
+		const { configId } = configuration;
 
-    if (!configId) {
-      this.loggerService.logDebug(
-        configuration,
-        `Wanted to write but configId was '${configId}'`
-      );
+		if (!configId) {
+			this.loggerService.logDebug(
+				configuration,
+				`Wanted to write but configId was '${configId}'`,
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    if (!this.hasStorage()) {
-      this.loggerService.logDebug(
-        configuration,
-        'Wanted to write but Storage was falsy'
-      );
+		if (!this.hasStorage()) {
+			this.loggerService.logDebug(
+				configuration,
+				"Wanted to write but Storage was falsy",
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    value = value || null;
+		value = value || null;
 
-    this.abstractSecurityStorage.write(configId, JSON.stringify(value));
+		this.abstractSecurityStorage.write(configId, JSON.stringify(value));
 
-    return true;
-  }
+		return true;
+	}
 
-  remove(key: string, configuration: OpenIdConfiguration): boolean {
-    if (!this.hasStorage()) {
-      this.loggerService.logDebug(
-        configuration,
-        `Wanted to remove '${key}' but Storage was falsy`
-      );
+	remove(key: string, configuration: OpenIdConfiguration): boolean {
+		if (!this.hasStorage()) {
+			this.loggerService.logDebug(
+				configuration,
+				`Wanted to remove '${key}' but Storage was falsy`,
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    // const storage = this.getStorage(configuration);
-    // if (!storage) {
-    //   this.loggerService.logDebug(configuration, `Wanted to write '${key}' but Storage was falsy`);
+		// const storage = this.getStorage(configuration);
+		// if (!storage) {
+		//   this.loggerService.logDebug(configuration, `Wanted to write '${key}' but Storage was falsy`);
 
-    //   return false;
-    // }
+		//   return false;
+		// }
 
-    this.abstractSecurityStorage.remove(key);
+		this.abstractSecurityStorage.remove(key);
 
-    return true;
-  }
+		return true;
+	}
 
-  // TODO THIS STORAGE WANTS AN ID BUT CLEARS EVERYTHING
-  clear(configuration: OpenIdConfiguration): boolean {
-    if (!this.hasStorage()) {
-      this.loggerService.logDebug(
-        configuration,
-        'Wanted to clear storage but Storage was falsy'
-      );
+	// TODO THIS STORAGE WANTS AN ID BUT CLEARS EVERYTHING
+	clear(configuration: OpenIdConfiguration): boolean {
+		if (!this.hasStorage()) {
+			this.loggerService.logDebug(
+				configuration,
+				"Wanted to clear storage but Storage was falsy",
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    // const storage = this.getStorage(configuration);
-    // if (!storage) {
-    //   this.loggerService.logDebug(configuration, `Wanted to clear storage but Storage was falsy`);
+		// const storage = this.getStorage(configuration);
+		// if (!storage) {
+		//   this.loggerService.logDebug(configuration, `Wanted to clear storage but Storage was falsy`);
 
-    //   return false;
-    // }
+		//   return false;
+		// }
 
-    this.abstractSecurityStorage.clear();
+		this.abstractSecurityStorage.clear();
 
-    return true;
-  }
+		return true;
+	}
 
-  private hasStorage(): boolean {
-    return typeof Storage !== 'undefined';
-  }
+	private hasStorage(): boolean {
+		return typeof Storage !== "undefined";
+	}
 }

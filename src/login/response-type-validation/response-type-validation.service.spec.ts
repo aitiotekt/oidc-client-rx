@@ -1,70 +1,70 @@
-import { TestBed } from '@/testing';
-import { vi } from 'vitest';
-import { LoggerService } from '../../logging/logger.service';
-import { mockProvider } from '../../testing/mock';
-import { FlowHelper } from '../../utils/flowHelper/flow-helper.service';
-import { ResponseTypeValidationService } from './response-type-validation.service';
+import { vi } from "vitest";
+import { TestBed } from "@/testing";
+import { LoggerService } from "../../logging/logger.service";
+import { mockProvider } from "../../testing/mock";
+import { FlowHelper } from "../../utils/flowHelper/flow-helper.service";
+import { ResponseTypeValidationService } from "./response-type-validation.service";
 
-describe('ResponseTypeValidationService', () => {
-  let responseTypeValidationService: ResponseTypeValidationService;
-  let flowHelper: FlowHelper;
+describe("ResponseTypeValidationService", () => {
+	let responseTypeValidationService: ResponseTypeValidationService;
+	let flowHelper: FlowHelper;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [],
-      providers: [
-        ResponseTypeValidationService,
-        mockProvider(LoggerService),
-        mockProvider(FlowHelper),
-      ],
-    });
-    responseTypeValidationService = TestBed.inject(
-      ResponseTypeValidationService
-    );
-    flowHelper = TestBed.inject(FlowHelper);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			imports: [],
+			providers: [
+				ResponseTypeValidationService,
+				mockProvider(LoggerService),
+				mockProvider(FlowHelper),
+			],
+		});
+		responseTypeValidationService = TestBed.inject(
+			ResponseTypeValidationService,
+		);
+		flowHelper = TestBed.inject(FlowHelper);
+	});
 
-  it('should create', () => {
-    expect(responseTypeValidationService).toBeTruthy();
-  });
+	it("should create", () => {
+		expect(responseTypeValidationService).toBeTruthy();
+	});
 
-  describe('hasConfigValidResponseType', () => {
-    it('returns true if current configured flow is any implicit flow', () => {
-      vi.spyOn(flowHelper, 'isCurrentFlowAnyImplicitFlow').mockReturnValue(
-        true
-      );
+	describe("hasConfigValidResponseType", () => {
+		it("returns true if current configured flow is any implicit flow", () => {
+			vi.spyOn(flowHelper, "isCurrentFlowAnyImplicitFlow").mockReturnValue(
+				true,
+			);
 
-      const result = responseTypeValidationService.hasConfigValidResponseType({
-        configId: 'configId1',
-      });
+			const result = responseTypeValidationService.hasConfigValidResponseType({
+				configId: "configId1",
+			});
 
-      expect(result).toEqual(true);
-    });
+			expect(result).toEqual(true);
+		});
 
-    it('returns true if current configured flow is code flow', () => {
-      vi.spyOn(flowHelper, 'isCurrentFlowAnyImplicitFlow').mockReturnValue(
-        false
-      );
-      vi.spyOn(flowHelper, 'isCurrentFlowCodeFlow').mockReturnValue(true);
+		it("returns true if current configured flow is code flow", () => {
+			vi.spyOn(flowHelper, "isCurrentFlowAnyImplicitFlow").mockReturnValue(
+				false,
+			);
+			vi.spyOn(flowHelper, "isCurrentFlowCodeFlow").mockReturnValue(true);
 
-      const result = responseTypeValidationService.hasConfigValidResponseType({
-        configId: 'configId1',
-      });
+			const result = responseTypeValidationService.hasConfigValidResponseType({
+				configId: "configId1",
+			});
 
-      expect(result).toEqual(true);
-    });
+			expect(result).toEqual(true);
+		});
 
-    it('returns false if current configured flow is neither code nor implicit flow', () => {
-      vi.spyOn(flowHelper, 'isCurrentFlowAnyImplicitFlow').mockReturnValue(
-        false
-      );
-      vi.spyOn(flowHelper, 'isCurrentFlowCodeFlow').mockReturnValue(false);
+		it("returns false if current configured flow is neither code nor implicit flow", () => {
+			vi.spyOn(flowHelper, "isCurrentFlowAnyImplicitFlow").mockReturnValue(
+				false,
+			);
+			vi.spyOn(flowHelper, "isCurrentFlowCodeFlow").mockReturnValue(false);
 
-      const result = responseTypeValidationService.hasConfigValidResponseType({
-        configId: 'configId1',
-      });
+			const result = responseTypeValidationService.hasConfigValidResponseType({
+				configId: "configId1",
+			});
 
-      expect(result).toEqual(false);
-    });
-  });
+			expect(result).toEqual(false);
+		});
+	});
 });

@@ -1,18 +1,18 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": "./src",
-    "baseUrl": ".",
-    "declarationDir": "./dist",
-    "outDir": "./dist",
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "lib": ["ES2021", "DOM", "DOM.Iterable"]
-  },
-  "include": ["src"],
-  "exclude": ["src/testing/**/*", "**/*.spec.ts", "node_modules"]
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"rootDir": "./src",
+		"baseUrl": ".",
+		"declarationDir": "./dist",
+		"outDir": "./dist",
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"lib": ["ES2021", "DOM", "DOM.Iterable"]
+	},
+	"include": ["src"],
+	"exclude": ["src/testing/**/*", "**/*.spec.ts", "node_modules"]
 }

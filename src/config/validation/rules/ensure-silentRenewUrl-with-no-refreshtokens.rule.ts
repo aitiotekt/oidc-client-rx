@@ -1,22 +1,22 @@
-import type { OpenIdConfiguration } from '../../openid-configuration';
-import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from '../rule';
+import type { OpenIdConfiguration } from "../../openid-configuration";
+import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from "../rule";
 
 export const ensureSilentRenewUrlWhenNoRefreshTokenUsed = (
-  passedConfig: OpenIdConfiguration
+	passedConfig: OpenIdConfiguration,
 ): RuleValidationResult => {
-  const usesSilentRenew = passedConfig.silentRenew;
-  const usesRefreshToken = passedConfig.useRefreshToken;
-  const hasSilentRenewUrl = passedConfig.silentRenewUrl;
+	const usesSilentRenew = passedConfig.silentRenew;
+	const usesRefreshToken = passedConfig.useRefreshToken;
+	const hasSilentRenewUrl = passedConfig.silentRenewUrl;
 
-  if (usesSilentRenew && !usesRefreshToken && !hasSilentRenewUrl) {
-    return {
-      result: false,
-      messages: [
-        'Please provide a silent renew URL if using renew and not refresh tokens',
-      ],
-      level: 'error',
-    };
-  }
+	if (usesSilentRenew && !usesRefreshToken && !hasSilentRenewUrl) {
+		return {
+			result: false,
+			messages: [
+				"Please provide a silent renew URL if using renew and not refresh tokens",
+			],
+			level: "error",
+		};
+	}
 
-  return POSITIVE_VALIDATION_RESULT;
+	return POSITIVE_VALIDATION_RESULT;
 };

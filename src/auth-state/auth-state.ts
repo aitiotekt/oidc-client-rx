@@ -1,7 +1,7 @@
-import type { ValidationResult } from '../validation/validation-result';
+import type { ValidationResult } from "../validation/validation-result";
 
 export interface AuthStateResult {
-  isAuthenticated: boolean;
-  validationResult: ValidationResult;
-  isRenewProcess: boolean;
+	isAuthenticated: boolean;
+	validationResult: ValidationResult;
+	isRenewProcess: boolean;
 }

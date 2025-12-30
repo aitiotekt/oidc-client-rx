@@ -1,122 +1,122 @@
 import type {
-  HttpEvent,
-  HttpHandler,
-  HttpHandlerFn,
-  HttpInterceptor,
-  HttpInterceptorFn,
-  HttpRequest,
-} from '@ngify/http';
-import { Injectable, inject } from 'injection-js';
-import type { Observable } from 'rxjs';
-import { AuthStateService } from '../auth-state/auth-state.service';
-import { ConfigurationService } from '../config/config.service';
-import { LoggerService } from '../logging/logger.service';
-import { flattenArray } from '../utils/collections/collections.helper';
-import { ClosestMatchingRouteService } from './closest-matching-route.service';
+	HttpEvent,
+	HttpHandler,
+	HttpHandlerFn,
+	HttpInterceptor,
+	HttpInterceptorFn,
+	HttpRequest,
+} from "@ngify/http";
+import { Injectable, inject } from "injection-js";
+import type { Observable } from "rxjs";
+import { AuthStateService } from "../auth-state/auth-state.service";
+import { ConfigurationService } from "../config/config.service";
+import { LoggerService } from "../logging/logger.service";
+import { flattenArray } from "../utils/collections/collections.helper";
+import { ClosestMatchingRouteService } from "./closest-matching-route.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private readonly authStateService = inject(AuthStateService);
+	private readonly authStateService = inject(AuthStateService);
 
-  private readonly configurationService = inject(ConfigurationService);
+	private readonly configurationService = inject(ConfigurationService);
 
-  private readonly loggerService = inject(LoggerService);
+	private readonly loggerService = inject(LoggerService);
 
-  private readonly closestMatchingRouteService = inject(
-    ClosestMatchingRouteService
-  );
+	private readonly closestMatchingRouteService = inject(
+		ClosestMatchingRouteService,
+	);
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    return interceptRequest(req, next.handle, {
-      configurationService: this.configurationService,
-      authStateService: this.authStateService,
-      closestMatchingRouteService: this.closestMatchingRouteService,
-      loggerService: this.loggerService,
-    });
-  }
+	intercept(
+		req: HttpRequest<any>,
+		next: HttpHandler,
+	): Observable<HttpEvent<any>> {
+		return interceptRequest(req, next.handle, {
+			configurationService: this.configurationService,
+			authStateService: this.authStateService,
+			closestMatchingRouteService: this.closestMatchingRouteService,
+			loggerService: this.loggerService,
+		});
+	}
 }
 
 export function authInterceptor(): HttpInterceptorFn {
-  const deps = {
-    configurationService: inject(ConfigurationService),
-    authStateService: inject(AuthStateService),
-    closestMatchingRouteService: inject(ClosestMatchingRouteService),
-    loggerService: inject(LoggerService),
-  };
-  return (req, next) => {
-    return interceptRequest(req, next, deps);
-  };
+	const deps = {
+		configurationService: inject(ConfigurationService),
+		authStateService: inject(AuthStateService),
+		closestMatchingRouteService: inject(ClosestMatchingRouteService),
+		loggerService: inject(LoggerService),
+	};
+	return (req, next) => {
+		return interceptRequest(req, next, deps);
+	};
 }
 
 function interceptRequest(
-  req: HttpRequest<any>,
-  next: HttpHandlerFn,
-  deps: {
-    authStateService: AuthStateService;
-    configurationService: ConfigurationService;
-    loggerService: LoggerService;
-    closestMatchingRouteService: ClosestMatchingRouteService;
-  }
+	req: HttpRequest<any>,
+	next: HttpHandlerFn,
+	deps: {
+		authStateService: AuthStateService;
+		configurationService: ConfigurationService;
+		loggerService: LoggerService;
+		closestMatchingRouteService: ClosestMatchingRouteService;
+	},
 ): Observable<HttpEvent<unknown>> {
-  if (!deps.configurationService.hasAtLeastOneConfig()) {
-    return next(req);
-  }
+	if (!deps.configurationService.hasAtLeastOneConfig()) {
+		return next(req);
+	}
 
-  const allConfigurations = deps.configurationService.getAllConfigurations();
-  const allRoutesConfigured = allConfigurations.map(
-    (x) => x.secureRoutes || []
-  );
-  const allRoutesConfiguredFlat = flattenArray(allRoutesConfigured);
+	const allConfigurations = deps.configurationService.getAllConfigurations();
+	const allRoutesConfigured = allConfigurations.map(
+		(x) => x.secureRoutes || [],
+	);
+	const allRoutesConfiguredFlat = flattenArray(allRoutesConfigured);
 
-  if (allRoutesConfiguredFlat.length === 0) {
-    deps.loggerService.logDebug(
-      allConfigurations[0],
-      'No routes to check configured'
-    );
+	if (allRoutesConfiguredFlat.length === 0) {
+		deps.loggerService.logDebug(
+			allConfigurations[0],
+			"No routes to check configured",
+		);
 
-    return next(req);
-  }
+		return next(req);
+	}
 
-  const { matchingConfig, matchingRoute } =
-    deps.closestMatchingRouteService.getConfigIdForClosestMatchingRoute(
-      req.url,
-      allConfigurations
-    );
+	const { matchingConfig, matchingRoute } =
+		deps.closestMatchingRouteService.getConfigIdForClosestMatchingRoute(
+			req.url,
+			allConfigurations,
+		);
 
-  if (!matchingConfig) {
-    deps.loggerService.logDebug(
-      allConfigurations[0],
-      `Did not find any configured route for route ${req.url}`
-    );
+	if (!matchingConfig) {
+		deps.loggerService.logDebug(
+			allConfigurations[0],
+			`Did not find any configured route for route ${req.url}`,
+		);
 
-    return next(req);
-  }
+		return next(req);
+	}
 
-  deps.loggerService.logDebug(
-    matchingConfig,
-    `'${req.url}' matches configured route '${matchingRoute}'`
-  );
-  const token = deps.authStateService.getAccessToken(matchingConfig);
+	deps.loggerService.logDebug(
+		matchingConfig,
+		`'${req.url}' matches configured route '${matchingRoute}'`,
+	);
+	const token = deps.authStateService.getAccessToken(matchingConfig);
 
-  if (!token) {
-    deps.loggerService.logDebug(
-      matchingConfig,
-      `Wanted to add token to ${req.url} but found no token: '${token}'`
-    );
+	if (!token) {
+		deps.loggerService.logDebug(
+			matchingConfig,
+			`Wanted to add token to ${req.url} but found no token: '${token}'`,
+		);
 
-    return next(req);
-  }
+		return next(req);
+	}
 
-  deps.loggerService.logDebug(
-    matchingConfig,
-    `'${req.url}' matches configured route '${matchingRoute}', adding token`
-  );
-  req = req.clone({
-    headers: req.headers.set('Authorization', `Bearer ${token}`),
-  });
+	deps.loggerService.logDebug(
+		matchingConfig,
+		`'${req.url}' matches configured route '${matchingRoute}', adding token`,
+	);
+	req = req.clone({
+		headers: req.headers.set("Authorization", `Bearer ${token}`),
+	});
 
-  return next(req);
+	return next(req);
 }

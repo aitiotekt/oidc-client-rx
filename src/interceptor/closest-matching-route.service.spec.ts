@@ -1,177 +1,177 @@
-import { TestBed } from '@/testing';
-import { LoggerService } from '../logging/logger.service';
-import { mockProvider } from '../testing/mock';
-import { ClosestMatchingRouteService } from './closest-matching-route.service';
+import { TestBed } from "@/testing";
+import { LoggerService } from "../logging/logger.service";
+import { mockProvider } from "../testing/mock";
+import { ClosestMatchingRouteService } from "./closest-matching-route.service";
 
-describe('ClosestMatchingRouteService', () => {
-  let service: ClosestMatchingRouteService;
+describe("ClosestMatchingRouteService", () => {
+	let service: ClosestMatchingRouteService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ClosestMatchingRouteService, mockProvider(LoggerService)],
-    });
-    service = TestBed.inject(ClosestMatchingRouteService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [ClosestMatchingRouteService, mockProvider(LoggerService)],
+		});
+		service = TestBed.inject(ClosestMatchingRouteService);
+	});
 
-  it('should create', () => {
-    expect(service).toBeTruthy();
-  });
+	it("should create", () => {
+		expect(service).toBeTruthy();
+	});
 
-  describe('getConfigForClosestMatchingRoute', () => {
-    it('gets best match for configured routes', () => {
-      const allConfigs = [
-        {
-          configId: 'configId1',
-          secureRoutes: [
-            'https://my-secure-url.com/',
-            'https://my-second-secure-url.com/',
-          ],
-        },
-        {
-          configId: 'configId2',
-          secureRoutes: [
-            'https://my-third-secure-url.com/',
-            'https://my-fourth-second-secure-url.com/',
-          ],
-        },
-      ];
+	describe("getConfigForClosestMatchingRoute", () => {
+		it("gets best match for configured routes", () => {
+			const allConfigs = [
+				{
+					configId: "configId1",
+					secureRoutes: [
+						"https://my-secure-url.com/",
+						"https://my-second-secure-url.com/",
+					],
+				},
+				{
+					configId: "configId2",
+					secureRoutes: [
+						"https://my-third-secure-url.com/",
+						"https://my-fourth-second-secure-url.com/",
+					],
+				},
+			];
 
-      const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
-        'https://my-secure-url.com/',
-        allConfigs
-      );
+			const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
+				"https://my-secure-url.com/",
+				allConfigs,
+			);
 
-      expect(matchingConfig).toEqual(allConfigs[0]);
-    });
+			expect(matchingConfig).toEqual(allConfigs[0]);
+		});
 
-    it('gets best match for configured routes - same route prefix', () => {
-      const allConfigs = [
-        {
-          configId: 'configId1',
-          secureRoutes: [
-            'https://my-secure-url.com/',
-            'https://my-secure-url.com/test',
-          ],
-        },
-        {
-          configId: 'configId2',
-          secureRoutes: [
-            'https://my-third-secure-url.com/',
-            'https://my-fourth-second-secure-url.com/',
-          ],
-        },
-      ];
+		it("gets best match for configured routes - same route prefix", () => {
+			const allConfigs = [
+				{
+					configId: "configId1",
+					secureRoutes: [
+						"https://my-secure-url.com/",
+						"https://my-secure-url.com/test",
+					],
+				},
+				{
+					configId: "configId2",
+					secureRoutes: [
+						"https://my-third-secure-url.com/",
+						"https://my-fourth-second-secure-url.com/",
+					],
+				},
+			];
 
-      const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
-        'https://my-secure-url.com/',
-        allConfigs
-      );
+			const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
+				"https://my-secure-url.com/",
+				allConfigs,
+			);
 
-      expect(matchingConfig).toEqual(allConfigs[0]);
-    });
+			expect(matchingConfig).toEqual(allConfigs[0]);
+		});
 
-    it('gets best match for configured routes - main route', () => {
-      const allConfigs = [
-        {
-          configId: 'configId1',
-          secureRoutes: [
-            'https://first-route.com/',
-            'https://second-route.com/test',
-          ],
-        },
-        {
-          configId: 'configId2',
-          secureRoutes: [
-            'https://third-route.com/test2',
-            'https://fourth-route.com/test3',
-          ],
-        },
-      ];
+		it("gets best match for configured routes - main route", () => {
+			const allConfigs = [
+				{
+					configId: "configId1",
+					secureRoutes: [
+						"https://first-route.com/",
+						"https://second-route.com/test",
+					],
+				},
+				{
+					configId: "configId2",
+					secureRoutes: [
+						"https://third-route.com/test2",
+						"https://fourth-route.com/test3",
+					],
+				},
+			];
 
-      const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
-        'https://first-route.com/',
-        allConfigs
-      );
+			const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
+				"https://first-route.com/",
+				allConfigs,
+			);
 
-      expect(matchingConfig).toEqual(allConfigs[0]);
-    });
+			expect(matchingConfig).toEqual(allConfigs[0]);
+		});
 
-    it('gets best match for configured routes - request route with params', () => {
-      const allConfigs = [
-        {
-          configId: 'configId1',
-          secureRoutes: [
-            'https://first-route.com/',
-            'https://second-route.com/test',
-          ],
-        },
-        {
-          configId: 'configId2',
-          secureRoutes: [
-            'https://third-route.com/test2',
-            'https://fourth-route.com/test3',
-          ],
-        },
-      ];
+		it("gets best match for configured routes - request route with params", () => {
+			const allConfigs = [
+				{
+					configId: "configId1",
+					secureRoutes: [
+						"https://first-route.com/",
+						"https://second-route.com/test",
+					],
+				},
+				{
+					configId: "configId2",
+					secureRoutes: [
+						"https://third-route.com/test2",
+						"https://fourth-route.com/test3",
+					],
+				},
+			];
 
-      const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
-        'https://first-route.com/anyparam',
-        allConfigs
-      );
+			const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
+				"https://first-route.com/anyparam",
+				allConfigs,
+			);
 
-      expect(matchingConfig).toEqual(allConfigs[0]);
-    });
+			expect(matchingConfig).toEqual(allConfigs[0]);
+		});
 
-    it('gets best match for configured routes - configured route with params', () => {
-      const allConfigs = [
-        {
-          configId: 'configId1',
-          secureRoutes: [
-            'https://first-route.com/',
-            'https://second-route.com/test',
-          ],
-        },
-        {
-          configId: 'configId2',
-          secureRoutes: [
-            'https://third-route.com/test2',
-            'https://fourth-route.com/test3',
-          ],
-        },
-      ];
+		it("gets best match for configured routes - configured route with params", () => {
+			const allConfigs = [
+				{
+					configId: "configId1",
+					secureRoutes: [
+						"https://first-route.com/",
+						"https://second-route.com/test",
+					],
+				},
+				{
+					configId: "configId2",
+					secureRoutes: [
+						"https://third-route.com/test2",
+						"https://fourth-route.com/test3",
+					],
+				},
+			];
 
-      const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
-        'https://third-route.com/',
-        allConfigs
-      );
+			const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
+				"https://third-route.com/",
+				allConfigs,
+			);
 
-      expect(matchingConfig).toBeNull();
-    });
+			expect(matchingConfig).toBeNull();
+		});
 
-    it('gets best match for configured routes - no config Id', () => {
-      const allConfigs = [
-        {
-          configId: 'configId1',
-          secureRoutes: [
-            'https://my-secure-url.com/',
-            'https://my-secure-url.com/test',
-          ],
-        },
-        {
-          configId: 'configId2',
-          secureRoutes: [
-            'https://my-secure-url.com/test2',
-            'https://my-secure-url.com/test2/test',
-          ],
-        },
-      ];
+		it("gets best match for configured routes - no config Id", () => {
+			const allConfigs = [
+				{
+					configId: "configId1",
+					secureRoutes: [
+						"https://my-secure-url.com/",
+						"https://my-secure-url.com/test",
+					],
+				},
+				{
+					configId: "configId2",
+					secureRoutes: [
+						"https://my-secure-url.com/test2",
+						"https://my-secure-url.com/test2/test",
+					],
+				},
+			];
 
-      const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
-        'blabla',
-        allConfigs
-      );
+			const { matchingConfig } = service.getConfigIdForClosestMatchingRoute(
+				"blabla",
+				allConfigs,
+			);
 
-      expect(matchingConfig).toBeNull();
-    });
-  });
+			expect(matchingConfig).toBeNull();
+		});
+	});
 });

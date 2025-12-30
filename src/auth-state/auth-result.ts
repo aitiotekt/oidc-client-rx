@@ -1,9 +1,9 @@
 export interface AuthenticatedResult {
-  isAuthenticated: boolean;
-  allConfigsAuthenticated: ConfigAuthenticatedResult[];
+	isAuthenticated: boolean;
+	allConfigsAuthenticated: ConfigAuthenticatedResult[];
 }
 
 export interface ConfigAuthenticatedResult {
-  configId: string;
-  isAuthenticated: boolean;
+	configId: string;
+	isAuthenticated: boolean;
 }

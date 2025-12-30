@@ -1,16 +1,16 @@
-import type { OpenIdConfiguration } from '../../openid-configuration';
-import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from '../rule';
+import type { OpenIdConfiguration } from "../../openid-configuration";
+import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from "../rule";
 
 export const ensureRedirectRule = (
-  passedConfig: OpenIdConfiguration
+	passedConfig: OpenIdConfiguration,
 ): RuleValidationResult => {
-  if (!passedConfig.redirectUrl) {
-    return {
-      result: false,
-      messages: ['The redirectUrl is required and missing from your config'],
-      level: 'error',
-    };
-  }
+	if (!passedConfig.redirectUrl) {
+		return {
+			result: false,
+			messages: ["The redirectUrl is required and missing from your config"],
+			level: "error",
+		};
+	}
 
-  return POSITIVE_VALIDATION_RESULT;
+	return POSITIVE_VALIDATION_RESULT;
 };

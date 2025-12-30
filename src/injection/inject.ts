@@ -1,10 +1,10 @@
-import { inject } from 'injection-js';
+import { inject } from "injection-js";
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes:  false positive
 export interface AbstractType<T> extends Function {
-  prototype: T;
+	prototype: T;
 }
 
 export function injectAbstractType<T>(abstractType: AbstractType<T>): T {
-  return inject<T>(abstractType as any);
+	return inject<T>(abstractType as any);
 }

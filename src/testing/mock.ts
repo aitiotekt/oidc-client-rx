@@ -1,62 +1,62 @@
-import type { Provider } from 'injection-js';
+import type { Provider } from "injection-js";
 
 export function mockClass<T>(
-  obj: new (...args: any[]) => T
+	obj: new (...args: any[]) => T,
 ): new (
-  ...args: any[]
+	...args: any[]
 ) => T {
-  const keys = Object.getOwnPropertyNames(obj.prototype);
-  const allMethods = keys.filter((key) => {
-    try {
-      return typeof obj.prototype[key] === 'function';
-    } catch {
-      return false;
-    }
-  });
-  const allProperties = keys.filter((x) => !allMethods.includes(x));
+	const keys = Object.getOwnPropertyNames(obj.prototype);
+	const allMethods = keys.filter((key) => {
+		try {
+			return typeof obj.prototype[key] === "function";
+		} catch {
+			return false;
+		}
+	});
+	const allProperties = keys.filter((x) => !allMethods.includes(x));
 
-  const mockedClass = class T {};
+	const mockedClass = class T {};
 
-  for (const method of allMethods) {
-    const mockImplementation = Reflect.getMetadata(
-      'mock:implementation',
-      obj.prototype,
-      method
-    );
-    (mockedClass.prototype as any)[method] =
-      mockImplementation ??
-      ((): any => {
-        return;
-      });
-  }
+	for (const method of allMethods) {
+		const mockImplementation = Reflect.getMetadata(
+			"mock:implementation",
+			obj.prototype,
+			method,
+		);
+		(mockedClass.prototype as any)[method] =
+			mockImplementation ??
+			((): any => {
+				return;
+			});
+	}
 
-  for (const method of allProperties) {
-    Object.defineProperty(mockedClass.prototype, method, {
-      get() {
-        return '';
-      },
-      configurable: true,
-    });
-  }
+	for (const method of allProperties) {
+		Object.defineProperty(mockedClass.prototype, method, {
+			get() {
+				return "";
+			},
+			configurable: true,
+		});
+	}
 
-  return mockedClass as any;
+	return mockedClass as any;
 }
 
 export function mockProvider<T>(
-  obj: new (...args: any[]) => T,
-  token?: any
+	obj: new (...args: any[]) => T,
+	token?: any,
 ): Provider {
-  return {
-    provide: token ?? obj,
-    useClass: mockClass(obj),
-  };
+	return {
+		provide: token ?? obj,
+		useClass: mockClass(obj),
+	};
 }
 
 export function mockAbstractProvider<T, M extends T>(
-  type: abstract new (...args: any[]) => T,
-  mockType: new (...args: any[]) => M
+	type: abstract new (...args: any[]) => T,
+	mockType: new (...args: any[]) => M,
 ): Provider {
-  const mock = mockClass(mockType);
+	const mock = mockClass(mockType);
 
-  return { provide: type, useClass: mock };
+	return { provide: type, useClass: mock };
 }

@@ -1,6 +1,6 @@
-import type { EventTypes } from './event-types';
+import type { EventTypes } from "./event-types";
 
 export interface OidcClientNotification<T> {
-  type: EventTypes;
-  value?: T;
+	type: EventTypes;
+	value?: T;
 }

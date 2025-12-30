@@ -1,16 +1,16 @@
 {
-  "references": [
-    {
-      "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./tsconfig.scripts.json"
-    },
-    {
-      "path": "./examples/react-tanstack-router"
-    }
-  ]
+	"references": [
+		{
+			"path": "./tsconfig.lib.json"
+		},
+		{
+			"path": "./tsconfig.spec.json"
+		},
+		{
+			"path": "./tsconfig.scripts.json"
+		},
+		{
+			"path": "./examples/react-tanstack-router"
+		}
+	]
 }

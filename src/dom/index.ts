@@ -1,3 +1,3 @@
-import { InjectionToken } from 'injection-js';
+import { InjectionToken } from "injection-js";
 
-export const DOCUMENT = new InjectionToken<Document>('document');
+export const DOCUMENT = new InjectionToken<Document>("document");

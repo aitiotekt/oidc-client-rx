@@ -1,24 +1,24 @@
-import { Injectable, inject } from 'injection-js';
-import { DOCUMENT } from '../../dom';
+import { Injectable, inject } from "injection-js";
+import { DOCUMENT } from "../../dom";
 
 @Injectable()
 export class CurrentUrlService {
-  private readonly document: Document = inject(DOCUMENT);
+	private readonly document: Document = inject(DOCUMENT);
 
-  getStateParamFromCurrentUrl(url?: string): string | null {
-    const currentUrl = url || this.getCurrentUrl();
+	getStateParamFromCurrentUrl(url?: string): string | null {
+		const currentUrl = url || this.getCurrentUrl();
 
-    if (!currentUrl) {
-      return null;
-    }
+		if (!currentUrl) {
+			return null;
+		}
 
-    const parsedUrl = new URL(currentUrl);
-    const urlParams = new URLSearchParams(parsedUrl.search);
+		const parsedUrl = new URL(currentUrl);
+		const urlParams = new URLSearchParams(parsedUrl.search);
 
-    return urlParams.get('state');
-  }
+		return urlParams.get("state");
+	}
 
-  getCurrentUrl(): string | null {
-    return this.document?.defaultView?.location.toString() ?? null;
-  }
+	getCurrentUrl(): string | null {
+		return this.document?.defaultView?.location.toString() ?? null;
+	}
 }

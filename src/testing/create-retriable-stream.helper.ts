@@ -1,15 +1,15 @@
-import { type Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { vi } from 'vitest';
+import { type Observable, of } from "rxjs";
+import { switchMap } from "rxjs/operators";
+import { vi } from "vitest";
 
 // Create retriable observable stream to test retry / retryWhen. Credits to:
 // https://stackoverflow.com/questions/51399819/how-to-create-a-mock-observable-to-test-http-rxjs-retry-retrywhen-in-angular
 export const createRetriableStream = (...resp$: any[]): Observable<any> => {
-  const fetchData = vi.fn();
+	const fetchData = vi.fn();
 
-  for (const r of resp$) {
-    fetchData.mockReturnValueOnce(r);
-  }
+	for (const r of resp$) {
+		fetchData.mockReturnValueOnce(r);
+	}
 
-  return of(null).pipe(switchMap((_) => fetchData()));
+	return of(null).pipe(switchMap((_) => fetchData()));
 };

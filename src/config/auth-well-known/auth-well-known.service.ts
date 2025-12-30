@@ -1,58 +1,58 @@
-import { Injectable, inject } from 'injection-js';
-import { type Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { EventTypes } from '../../public-events/event-types';
-import { PublicEventsService } from '../../public-events/public-events.service';
-import { StoragePersistenceService } from '../../storage/storage-persistence.service';
-import type { OpenIdConfiguration } from '../openid-configuration';
-import { AuthWellKnownDataService } from './auth-well-known-data.service';
-import type { AuthWellKnownEndpoints } from './auth-well-known-endpoints';
+import { Injectable, inject } from "injection-js";
+import { type Observable, throwError } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
+import { EventTypes } from "../../public-events/event-types";
+import { PublicEventsService } from "../../public-events/public-events.service";
+import { StoragePersistenceService } from "../../storage/storage-persistence.service";
+import type { OpenIdConfiguration } from "../openid-configuration";
+import { AuthWellKnownDataService } from "./auth-well-known-data.service";
+import type { AuthWellKnownEndpoints } from "./auth-well-known-endpoints";
 
 @Injectable()
 export class AuthWellKnownService {
-  private readonly dataService = inject(AuthWellKnownDataService);
+	private readonly dataService = inject(AuthWellKnownDataService);
 
-  private readonly publicEventsService = inject(PublicEventsService);
+	private readonly publicEventsService = inject(PublicEventsService);
 
-  private readonly storagePersistenceService = inject(
-    StoragePersistenceService
-  );
+	private readonly storagePersistenceService = inject(
+		StoragePersistenceService,
+	);
 
-  storeWellKnownEndpoints(
-    config: OpenIdConfiguration,
-    mappedWellKnownEndpoints: AuthWellKnownEndpoints
-  ): void {
-    this.storagePersistenceService.write(
-      'authWellKnownEndPoints',
-      mappedWellKnownEndpoints,
-      config
-    );
-  }
+	storeWellKnownEndpoints(
+		config: OpenIdConfiguration,
+		mappedWellKnownEndpoints: AuthWellKnownEndpoints,
+	): void {
+		this.storagePersistenceService.write(
+			"authWellKnownEndPoints",
+			mappedWellKnownEndpoints,
+			config,
+		);
+	}
 
-  queryAndStoreAuthWellKnownEndPoints(
-    config: OpenIdConfiguration | null
-  ): Observable<AuthWellKnownEndpoints> {
-    if (!config) {
-      return throwError(
-        () =>
-          new Error(
-            'Please provide a configuration before setting up the module'
-          )
-      );
-    }
+	queryAndStoreAuthWellKnownEndPoints(
+		config: OpenIdConfiguration | null,
+	): Observable<AuthWellKnownEndpoints> {
+		if (!config) {
+			return throwError(
+				() =>
+					new Error(
+						"Please provide a configuration before setting up the module",
+					),
+			);
+		}
 
-    return this.dataService.getWellKnownEndPointsForConfig(config).pipe(
-      tap((mappedWellKnownEndpoints) =>
-        this.storeWellKnownEndpoints(config, mappedWellKnownEndpoints)
-      ),
-      catchError((error) => {
-        this.publicEventsService.fireEvent(
-          EventTypes.ConfigLoadingFailed,
-          null
-        );
+		return this.dataService.getWellKnownEndPointsForConfig(config).pipe(
+			tap((mappedWellKnownEndpoints) =>
+				this.storeWellKnownEndpoints(config, mappedWellKnownEndpoints),
+			),
+			catchError((error) => {
+				this.publicEventsService.fireEvent(
+					EventTypes.ConfigLoadingFailed,
+					null,
+				);
 
-        return throwError(() => new Error(error));
-      })
-    );
-  }
+				return throwError(() => new Error(error));
+			}),
+		);
+	}
 }

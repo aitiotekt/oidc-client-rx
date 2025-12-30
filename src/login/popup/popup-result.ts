@@ -1,4 +1,4 @@
 export interface PopupResult {
-  userClosed: boolean;
-  receivedUrl: string;
+	userClosed: boolean;
+	receivedUrl: string;
 }

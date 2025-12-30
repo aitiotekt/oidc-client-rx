@@ -1,71 +1,73 @@
-import { HttpResponse } from '@ngify/http';
-import { Injectable, inject } from 'injection-js';
-import { type Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import { DataService } from '../api/data.service';
-import type { OpenIdConfiguration } from '../config/openid-configuration';
-import { LoggerService } from '../logging/logger.service';
-import { StoragePersistenceService } from '../storage/storage-persistence.service';
-import type { JwtKeys } from '../validation/jwtkeys';
+import { HttpResponse } from "@ngify/http";
+import { Injectable, inject } from "injection-js";
+import { type Observable, throwError } from "rxjs";
+import { catchError, retry } from "rxjs/operators";
+import { DataService } from "../api/data.service";
+import type { OpenIdConfiguration } from "../config/openid-configuration";
+import { LoggerService } from "../logging/logger.service";
+import { StoragePersistenceService } from "../storage/storage-persistence.service";
+import type { JwtKeys } from "../validation/jwtkeys";
 
 @Injectable()
 export class SigninKeyDataService {
-  private readonly loggerService = inject(LoggerService);
+	private readonly loggerService = inject(LoggerService);
 
-  private readonly storagePersistenceService = inject(
-    StoragePersistenceService
-  );
+	private readonly storagePersistenceService = inject(
+		StoragePersistenceService,
+	);
 
-  private readonly dataService = inject(DataService);
+	private readonly dataService = inject(DataService);
 
-  getSigningKeys(
-    currentConfiguration: OpenIdConfiguration
-  ): Observable<JwtKeys> {
-    const authWellKnownEndPoints = this.storagePersistenceService.read(
-      'authWellKnownEndPoints',
-      currentConfiguration
-    );
-    const jwksUri = authWellKnownEndPoints?.jwksUri;
+	getSigningKeys(
+		currentConfiguration: OpenIdConfiguration,
+	): Observable<JwtKeys> {
+		const authWellKnownEndPoints = this.storagePersistenceService.read(
+			"authWellKnownEndPoints",
+			currentConfiguration,
+		);
+		const jwksUri = authWellKnownEndPoints?.jwksUri;
 
-    if (!jwksUri) {
-      const error = `getSigningKeys: authWellKnownEndpoints.jwksUri is: '${jwksUri}'`;
+		if (!jwksUri) {
+			const error = `getSigningKeys: authWellKnownEndpoints.jwksUri is: '${jwksUri}'`;
 
-      this.loggerService.logWarning(currentConfiguration, error);
+			this.loggerService.logWarning(currentConfiguration, error);
 
-      return throwError(() => new Error(error));
-    }
+			return throwError(() => new Error(error));
+		}
 
-    this.loggerService.logDebug(
-      currentConfiguration,
-      'Getting signinkeys from ',
-      jwksUri
-    );
+		this.loggerService.logDebug(
+			currentConfiguration,
+			"Getting signinkeys from ",
+			jwksUri,
+		);
 
-    return this.dataService.get<JwtKeys>(jwksUri, currentConfiguration).pipe(
-      retry(2),
-      catchError((e) => this.handleErrorGetSigningKeys(e, currentConfiguration))
-    );
-  }
+		return this.dataService.get<JwtKeys>(jwksUri, currentConfiguration).pipe(
+			retry(2),
+			catchError((e) =>
+				this.handleErrorGetSigningKeys(e, currentConfiguration),
+			),
+		);
+	}
 
-  private handleErrorGetSigningKeys(
-    errorResponse: HttpResponse<any> | any,
-    currentConfiguration: OpenIdConfiguration
-  ): Observable<never> {
-    let errMsg = '';
+	private handleErrorGetSigningKeys(
+		errorResponse: HttpResponse<any> | any,
+		currentConfiguration: OpenIdConfiguration,
+	): Observable<never> {
+		let errMsg = "";
 
-    if (errorResponse instanceof HttpResponse) {
-      const body = errorResponse.body || {};
-      const err = JSON.stringify(body);
-      const { status, statusText } = errorResponse;
+		if (errorResponse instanceof HttpResponse) {
+			const body = errorResponse.body || {};
+			const err = JSON.stringify(body);
+			const { status, statusText } = errorResponse;
 
-      errMsg = `${status || ''} - ${statusText || ''} ${err || ''}`;
-    } else {
-      const { message } = errorResponse;
+			errMsg = `${status || ""} - ${statusText || ""} ${err || ""}`;
+		} else {
+			const { message } = errorResponse;
 
-      errMsg = message ? message : `${errorResponse}`;
-    }
-    this.loggerService.logError(currentConfiguration, errMsg);
+			errMsg = message ? message : `${errorResponse}`;
+		}
+		this.loggerService.logError(currentConfiguration, errMsg);
 
-    return throwError(() => new Error(errMsg));
-  }
+		return throwError(() => new Error(errMsg));
+	}
 }

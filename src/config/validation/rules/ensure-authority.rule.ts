@@ -1,16 +1,16 @@
-import type { OpenIdConfiguration } from '../../openid-configuration';
-import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from '../rule';
+import type { OpenIdConfiguration } from "../../openid-configuration";
+import { POSITIVE_VALIDATION_RESULT, type RuleValidationResult } from "../rule";
 
 export const ensureAuthority = (
-  passedConfig: OpenIdConfiguration
+	passedConfig: OpenIdConfiguration,
 ): RuleValidationResult => {
-  if (!passedConfig.authority) {
-    return {
-      result: false,
-      messages: ['The authority URL MUST be provided in the configuration! '],
-      level: 'error',
-    };
-  }
+	if (!passedConfig.authority) {
+		return {
+			result: false,
+			messages: ["The authority URL MUST be provided in the configuration! "],
+			level: "error",
+		};
+	}
 
-  return POSITIVE_VALIDATION_RESULT;
+	return POSITIVE_VALIDATION_RESULT;
 };

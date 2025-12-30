@@ -1,2 +1,2 @@
-export type { Module } from './module';
-export { injectAbstractType } from './inject';
+export { injectAbstractType } from "./inject";
+export type { Module } from "./module";

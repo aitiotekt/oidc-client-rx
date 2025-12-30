@@ -1,4 +1,4 @@
 export interface ParResponse {
-  requestUri: string;
-  expiresIn: number;
+	requestUri: string;
+	expiresIn: number;
 }

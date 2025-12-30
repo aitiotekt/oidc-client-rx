@@ -1,182 +1,183 @@
-import { Injectable, inject } from 'injection-js';
-import type { OpenIdConfiguration } from '../../config/openid-configuration';
-import { DOCUMENT } from '../../dom';
-import { LoggerService } from '../../logging/logger.service';
+import { Injectable, inject } from "injection-js";
+import type { OpenIdConfiguration } from "../../config/openid-configuration";
+import { DOCUMENT } from "../../dom";
+import { LoggerService } from "../../logging/logger.service";
 
 const PARTS_OF_TOKEN = 3;
 
 @Injectable()
 export class TokenHelperService {
-  private readonly loggerService = inject(LoggerService);
+	private readonly loggerService = inject(LoggerService);
 
-  private readonly document = inject<Document>(DOCUMENT);
+	private readonly document = inject<Document>(DOCUMENT);
 
-  getTokenExpirationDate(dataIdToken: any): Date {
-    if (!Object.prototype.hasOwnProperty.call(dataIdToken, 'exp')) {
-      return new Date(new Date().toUTCString());
-    }
+	getTokenExpirationDate(dataIdToken: any): Date {
+		if (!Object.hasOwn(dataIdToken, "exp")) {
+			return new Date(new Date().toUTCString());
+		}
 
-    const date = new Date(0); // The 0 here is the key, which sets the date to the epoch
+		const date = new Date(0); // The 0 here is the key, which sets the date to the epoch
 
-    date.setUTCSeconds(dataIdToken.exp);
+		date.setUTCSeconds(dataIdToken.exp);
 
-    return date;
-  }
+		return date;
+	}
 
-  getSigningInputFromToken(
-    token: string | undefined | null,
-    encoded: boolean,
-    configuration: OpenIdConfiguration
-  ): string {
-    if (!this.tokenIsValid(token, configuration)) {
-      return '';
-    }
+	getSigningInputFromToken(
+		token: string | undefined | null,
+		encoded: boolean,
+		configuration: OpenIdConfiguration,
+	): string {
+		if (!this.tokenIsValid(token, configuration)) {
+			return "";
+		}
 
-    const header: string = this.getHeaderFromToken(
-      token,
-      encoded,
-      configuration
-    );
-    const payload: string = this.getPayloadFromToken(
-      token,
-      encoded,
-      configuration
-    );
+		const header: string = this.getHeaderFromToken(
+			token,
+			encoded,
+			configuration,
+		);
+		const payload: string = this.getPayloadFromToken(
+			token,
+			encoded,
+			configuration,
+		);
 
-    return [header, payload].join('.');
-  }
+		return [header, payload].join(".");
+	}
 
-  getHeaderFromToken(
-    token: string | undefined | null,
-    encoded: boolean,
-    configuration: OpenIdConfiguration
-  ): any {
-    if (!this.tokenIsValid(token, configuration)) {
-      return {};
-    }
+	getHeaderFromToken(
+		token: string | undefined | null,
+		encoded: boolean,
+		configuration: OpenIdConfiguration,
+	): any {
+		if (!this.tokenIsValid(token, configuration)) {
+			return {};
+		}
 
-    return this.getPartOfToken(token, 0, encoded);
-  }
+		return this.getPartOfToken(token, 0, encoded);
+	}
 
-  getPayloadFromToken(
-    token: string | undefined | null,
-    encoded: boolean,
-    configuration: OpenIdConfiguration | null
-  ): any {
-    if (!configuration) {
-      return {};
-    }
+	getPayloadFromToken(
+		token: string | undefined | null,
+		encoded: boolean,
+		configuration: OpenIdConfiguration | null,
+	): any {
+		if (!configuration) {
+			return {};
+		}
 
-    if (!this.tokenIsValid(token, configuration)) {
-      return {};
-    }
+		if (!this.tokenIsValid(token, configuration)) {
+			return {};
+		}
 
-    return this.getPartOfToken(token, 1, encoded);
-  }
+		return this.getPartOfToken(token, 1, encoded);
+	}
 
-  getSignatureFromToken(
-    token: string | undefined | null,
-    encoded: boolean,
-    configuration: OpenIdConfiguration
-  ): any {
-    if (!this.tokenIsValid(token, configuration)) {
-      return {};
-    }
+	getSignatureFromToken(
+		token: string | undefined | null,
+		encoded: boolean,
+		configuration: OpenIdConfiguration,
+	): any {
+		if (!this.tokenIsValid(token, configuration)) {
+			return {};
+		}
 
-    return this.getPartOfToken(token, 2, encoded);
-  }
+		return this.getPartOfToken(token, 2, encoded);
+	}
 
-  private getPartOfToken(token: string, index: number, encoded: boolean): any {
-    const partOfToken = this.extractPartOfToken(token, index);
+	private getPartOfToken(token: string, index: number, encoded: boolean): any {
+		const partOfToken = this.extractPartOfToken(token, index);
 
-    if (encoded) {
-      return partOfToken;
-    }
+		if (encoded) {
+			return partOfToken;
+		}
 
-    const result = this.urlBase64Decode(partOfToken);
+		const result = this.urlBase64Decode(partOfToken);
 
-    return JSON.parse(result);
-  }
+		return JSON.parse(result);
+	}
 
-  private urlBase64Decode(str: string): string {
-    let output = str.replace(/-/g, '+').replace(/_/g, '/');
+	private urlBase64Decode(str: string): string {
+		let output = str.replace(/-/g, "+").replace(/_/g, "/");
 
-    switch (output.length % 4) {
-      case 0:
-        break;
-      case 2:
-        output += '==';
-        break;
-      case 3:
-        output += '=';
-        break;
-      default:
-        throw new Error('Illegal base64url string!');
-    }
+		switch (output.length % 4) {
+			case 0:
+				break;
+			case 2:
+				output += "==";
+				break;
+			case 3:
+				output += "=";
+				break;
+			default:
+				throw new Error("Illegal base64url string!");
+		}
 
-    const decoded =
-      typeof this.document.defaultView !== 'undefined'
-        ? this.document.defaultView?.atob(output)
-        : Buffer.from(output, 'base64').toString('binary');
+		const decoded =
+			typeof this.document.defaultView !== "undefined"
+				? this.document.defaultView?.atob(output)
+				: Buffer.from(output, "base64").toString("binary");
 
-    if (!decoded) {
-      return '';
-    }
+		if (!decoded) {
+			return "";
+		}
 
-    try {
-      // Going backwards: from byte stream, to percent-encoding, to original string.
-      return decodeURIComponent(
-        decoded
-          .split('')
-          .map(
-            (c: string) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`
-          )
-          .join('')
-      );
-    } catch {
-      return decoded;
-    }
-  }
+		try {
+			// Going backwards: from byte stream, to percent-encoding, to original string.
+			return decodeURIComponent(
+				decoded
+					.split("")
+					.map(
+						(c: string) =>
+							`%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`,
+					)
+					.join(""),
+			);
+		} catch {
+			return decoded;
+		}
+	}
 
-  private tokenIsValid(
-    token: string | undefined | null,
-    configuration: OpenIdConfiguration
-  ): token is string {
-    if (!token) {
-      this.loggerService.logError(
-        configuration,
-        `token '${token}' is not valid --> token falsy`
-      );
+	private tokenIsValid(
+		token: string | undefined | null,
+		configuration: OpenIdConfiguration,
+	): token is string {
+		if (!token) {
+			this.loggerService.logError(
+				configuration,
+				`token '${token}' is not valid --> token falsy`,
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    if (!(token as string).includes('.')) {
-      this.loggerService.logError(
-        configuration,
-        `token '${token}' is not valid --> no dots included`
-      );
+		if (!(token as string).includes(".")) {
+			this.loggerService.logError(
+				configuration,
+				`token '${token}' is not valid --> no dots included`,
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    const parts = token.split('.');
+		const parts = token.split(".");
 
-    if (parts.length !== PARTS_OF_TOKEN) {
-      this.loggerService.logError(
-        configuration,
-        `token '${token}' is not valid --> token has to have exactly ${
-          PARTS_OF_TOKEN - 1
-        } dots`
-      );
+		if (parts.length !== PARTS_OF_TOKEN) {
+			this.loggerService.logError(
+				configuration,
+				`token '${token}' is not valid --> token has to have exactly ${
+					PARTS_OF_TOKEN - 1
+				} dots`,
+			);
 
-      return false;
-    }
+			return false;
+		}
 
-    return true;
-  }
+		return true;
+	}
 
-  private extractPartOfToken(token: string, index: number): string {
-    return token.split('.')[index];
-  }
+	private extractPartOfToken(token: string, index: number): string {
+		return token.split(".")[index];
+	}
 }
