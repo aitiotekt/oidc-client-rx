@@ -195,7 +195,7 @@ export class TokenValidationService {
 	): boolean {
 		let validated = true;
 
-		if (!Object.hasOwn(dataIdToken, "iss")) {
+		if (!Object.prototype.hasOwnProperty.call(dataIdToken, "iss")) {
 			validated = false;
 			this.loggerService.logWarning(
 				configuration,
@@ -203,7 +203,7 @@ export class TokenValidationService {
 			);
 		}
 
-		if (!Object.hasOwn(dataIdToken, "sub")) {
+		if (!Object.prototype.hasOwnProperty.call(dataIdToken, "sub")) {
 			validated = false;
 			this.loggerService.logWarning(
 				configuration,
@@ -211,7 +211,7 @@ export class TokenValidationService {
 			);
 		}
 
-		if (!Object.hasOwn(dataIdToken, "aud")) {
+		if (!Object.prototype.hasOwnProperty.call(dataIdToken, "aud")) {
 			validated = false;
 			this.loggerService.logWarning(
 				configuration,
@@ -219,7 +219,7 @@ export class TokenValidationService {
 			);
 		}
 
-		if (!Object.hasOwn(dataIdToken, "exp")) {
+		if (!Object.prototype.hasOwnProperty.call(dataIdToken, "exp")) {
 			validated = false;
 			this.loggerService.logWarning(
 				configuration,
@@ -227,7 +227,7 @@ export class TokenValidationService {
 			);
 		}
 
-		if (!Object.hasOwn(dataIdToken, "iat")) {
+		if (!Object.prototype.hasOwnProperty.call(dataIdToken, "iat")) {
 			validated = false;
 			this.loggerService.logWarning(
 				configuration,
@@ -250,7 +250,7 @@ export class TokenValidationService {
 			return true;
 		}
 
-		if (!Object.hasOwn(dataIdToken, "iat")) {
+		if (!Object.prototype.hasOwnProperty.call(dataIdToken, "iat")) {
 			return false;
 		}
 

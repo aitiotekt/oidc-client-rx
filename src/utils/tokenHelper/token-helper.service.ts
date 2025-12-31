@@ -12,7 +12,7 @@ export class TokenHelperService {
 	private readonly document = inject<Document>(DOCUMENT);
 
 	getTokenExpirationDate(dataIdToken: any): Date {
-		if (!Object.hasOwn(dataIdToken, "exp")) {
+		if (!Object.prototype.hasOwnProperty.call(dataIdToken, "exp")) {
 			return new Date(new Date().toUTCString());
 		}
 

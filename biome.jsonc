@@ -10,7 +10,8 @@
 			},
 			"suspicious": {
 				"noExplicitAny": "off",
-				"noNonNullAssertedOptionalChain": "off"
+				"noNonNullAssertedOptionalChain": "off",
+				"noPrototypeBuiltins": "off" // Object.hasOwn need polyfill for older browsers
 			},
 			"complexity": {
 				"noForEach": "off"
