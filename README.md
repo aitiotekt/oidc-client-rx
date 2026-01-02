@@ -2,8 +2,8 @@
   <img src="./assets/logo-512.png" height="150" alt="logo">
   <div style="color: #232848; font-weight: 700;">OIDC-CLIENT-RX</div>
   <div align="center">
-    <img src="https://img.shields.io/github/actions/workflow/status/aitiotekt/oidc-client-rx/build.yml?branch=main" alt="build-status" />
-    <img src="https://img.shields.io/badge/status-work--in--progress-blue" alt="status-badge" />
+    <img src="https://img.shields.io/github/actions/workflow/status/aitiotekt/oidc-client-rx/ci.yml" alt="build-status" />
+    <img src="https://img.shields.io/npm/v/oidc-client-rx?tag=latest&label=npm&color=blue" alt="npm-version" />
   </div>
 </h1>
 
@@ -11,12 +11,18 @@
 
 ## Quick Start
 
-pnpm add oidc-client-rx injection-js @abraham/reflection
-# npm install oidc-client-rx injection-js @abraham/reflection
-# yarn add oidc-client-rx injection-js @abraham/reflection
+Choose a reflection lib such as `@abraham/reflection` or `reflect-metadata` or `core-js/es7/reflect`, then install:
+
+```shell
+pnpm add oidc-client-rx injection-js reflect-metadata
+# or npm
+npm install oidc-client-rx injection-js reflect-metadata
+# or yarn
+yarn add oidc-client-rx injection-js reflect-metadata
+```
 
 ```typescript
-import '@abraham/reflection'; // or 'reflect-metadata' | 'core-js/es7/reflect'
+import 'reflect-metadata'; // or '@abraham/reflection' | 'core-js/es7/reflect'
 import { type Injector, ReflectiveInjector } from 'injection-js';
 import { LogLevel, OidcSecurityService, provideAuth, withDefaultFeatures } from 'oidc-client-rx';
 
